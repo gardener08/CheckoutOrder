@@ -11,13 +11,20 @@ namespace CheckoutOrder
         static void Main(string[] args)
         {
             Program programToRun = new Program();
-            programToRun.ScanItem();
+            CheckoutItem itemToScan = new CheckoutItem();
+            programToRun.ScanItem(itemToScan);
         }
 
-        public double ScanItem()
+        public double ScanItem(CheckoutItem itemToScan)
         {
-            return 0.0;
+            return itemToScan.CurrentPrice;
         }
+    }
+
+    public class CheckoutItem
+    {
+        public string ItemName { get; set; }
+        public double CurrentPrice { get; set; }
     }
 
 

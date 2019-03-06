@@ -19,8 +19,10 @@ namespace CheckoutOrderTest
         [Fact]
         public void ScanItem()
         {
-            double totalBill = _checkoutOrderUnderTest.ScanItem();
-            Assert.Equal(0, totalBill);
+            CheckoutItem itemToScan = new CheckoutItem();
+            itemToScan.CurrentPrice = 2.0;
+            double totalBill = _checkoutOrderUnderTest.ScanItem(itemToScan);
+            Assert.Equal(2.0, totalBill);
         }
     }
 }
