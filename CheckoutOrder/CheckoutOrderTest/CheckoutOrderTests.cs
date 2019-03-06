@@ -20,7 +20,7 @@ namespace CheckoutOrderTest
         public void ScanItem()
         {
             _checkoutOrderUnderTest.ScanItem("Tomato Soup");
-            Assert.Equal(2.0, _checkoutOrderUnderTest.TotalGroceryBill);
+            Assert.Equal(.42, _checkoutOrderUnderTest.TotalGroceryBill);
         }
 
         [Fact]
@@ -28,7 +28,7 @@ namespace CheckoutOrderTest
         {
             _checkoutOrderUnderTest.ScanItem("Tomato Soup");
             _checkoutOrderUnderTest.ScanItem("Tomato Soup");
-            Assert.Equal(4.0, _checkoutOrderUnderTest.TotalGroceryBill);
+            Assert.Equal(.84, _checkoutOrderUnderTest.TotalGroceryBill);
         }
 
         [Fact]
