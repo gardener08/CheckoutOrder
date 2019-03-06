@@ -10,6 +10,14 @@ namespace CheckoutOrder
     {
         public double TotalGroceryBill { get; set; }
 
+        public readonly IDictionary<string,CheckoutItem> ItemsAvailableForSale = new Dictionary<string, CheckoutItem>
+        {
+            {
+                "Tomato Soup", new CheckoutItem("Tomato Soup", .42)
+            }
+
+        };
+
         public Program()
         {
             TotalGroceryBill = 0;
@@ -17,7 +25,7 @@ namespace CheckoutOrder
         static void Main(string[] args)
         {
             Program programToRun = new Program();
-            CheckoutItem itemToScan = new CheckoutItem();
+            CheckoutItem itemToScan = new CheckoutItem("Test", 0);
             programToRun.ScanItem(itemToScan);
         }
 
@@ -31,7 +39,12 @@ namespace CheckoutOrder
     {
         public string ItemName { get; set; }
         public double CurrentPrice { get; set; }
-    }
 
+        public CheckoutItem(string itemName, double currentPrice)
+        {
+            ItemName = itemName;
+            CurrentPrice = currentPrice;
+        }
+    }
 
 }
