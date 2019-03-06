@@ -21,10 +21,9 @@ namespace CheckoutOrder
             programToRun.ScanItem(itemToScan);
         }
 
-        public double ScanItem(CheckoutItem itemToScan)
+        public void ScanItem(CheckoutItem itemToScan)
         {
             TotalGroceryBill = TotalGroceryBill + itemToScan.CurrentPrice;
-            return itemToScan.CurrentPrice;
         }
     }
 

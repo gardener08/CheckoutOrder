@@ -21,8 +21,8 @@ namespace CheckoutOrderTest
         {
             CheckoutItem itemToScan = new CheckoutItem();
             itemToScan.CurrentPrice = 2.0;
-            double totalBill = _checkoutOrderUnderTest.ScanItem(itemToScan);
-            Assert.Equal(2.0, totalBill);
+            _checkoutOrderUnderTest.ScanItem(itemToScan);
+            Assert.Equal(2.0, _checkoutOrderUnderTest.TotalGroceryBill);
         }
 
         [Fact]
