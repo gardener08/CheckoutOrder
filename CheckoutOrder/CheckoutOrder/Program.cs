@@ -10,10 +10,10 @@ namespace CheckoutOrder
     {
         public double TotalGroceryBill { get; set; }
 
-        public readonly IDictionary<string,CheckoutItem> ItemsAvailableForSale = new Dictionary<string, CheckoutItem>
+        public readonly IDictionary<string,StockItem> ItemsAvailableForSale = new Dictionary<string, StockItem>
         {
             {
-                "Tomato Soup", new CheckoutItem("Tomato Soup", .42)
+                "Tomato Soup", new StockItem("Tomato Soup", .42, "eaches")
             }
 
         };
@@ -30,25 +30,27 @@ namespace CheckoutOrder
 
         public void ScanItem(string itemName)
         {
-            CheckoutItem itemToScan = ItemsAvailableForSale[itemName];
-            TotalGroceryBill = TotalGroceryBill + itemToScan.CurrentPrice;
+            StockItem itemToScan = ItemsAvailableForSale[itemName];
+            TotalGroceryBill = TotalGroceryBill + itemToScan.UnitPrice;
         }
 
         public void MarkDownItem(string itemName, double newPrice)
         {
-            ItemsAvailableForSale[itemName].CurrentPrice = newPrice;
+            ItemsAvailableForSale[itemName].UnitPrice = newPrice;
         }
     }
 
-    public class CheckoutItem
+    public class StockItem
     {
         public string ItemName { get; set; }
-        public double CurrentPrice { get; set; }
+        public double UnitPrice { get; set; }
+        public string PriceCategory { get; set; }
 
-        public CheckoutItem(string itemName, double currentPrice)
+        public StockItem(string itemName, double unitPrice, string priceCategory)
         {
             ItemName = itemName;
-            CurrentPrice = currentPrice;
+            UnitPrice = UnitPrice;
+            PriceCategory = priceCategory;
         }
     }
 
