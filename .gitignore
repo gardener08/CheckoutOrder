@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/CheckoutOrder/CheckoutOrder/bin/Debug
+/CheckoutOrder/CheckoutOrder/obj/Debug
+/CheckoutOrder/CheckoutOrderTest/bin/Debug
+/CheckoutOrder/CheckoutOrderTest/obj/Debug
+/CheckoutOrder/packages
+/CheckoutOrder/.vs/CheckoutOrder/v14/.suo
