@@ -49,7 +49,7 @@ namespace CheckoutOrder
         public StockItem(string itemName, double unitPrice, string priceCategory)
         {
             ItemName = itemName;
-            UnitPrice = UnitPrice;
+            UnitPrice = unitPrice;
             PriceCategory = priceCategory;
         }
     }
