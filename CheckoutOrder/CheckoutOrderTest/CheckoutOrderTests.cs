@@ -45,5 +45,13 @@ namespace CheckoutOrderTest
             _checkoutOrderUnderTest.ScanItem("Tomato Soup");
             Assert.Equal(.37, _checkoutOrderUnderTest.TotalGroceryBill);
         }
+
+        [Fact]
+        public void ScanWeighedItem()
+        {
+            _checkoutOrderUnderTest.ScanItem("Bananas", 2.2);
+            Assert.Equal(.99, _checkoutOrderUnderTest.TotalGroceryBill, 2);
+
+        }
     }
 }

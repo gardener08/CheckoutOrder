@@ -12,10 +12,8 @@ namespace CheckoutOrder
 
         public readonly IDictionary<string,StockItem> ItemsAvailableForSale = new Dictionary<string, StockItem>
         {
-            {
-                "Tomato Soup", new StockItem("Tomato Soup", .42, "eaches")
-            }
-
+            {"Tomato Soup", new StockItem("Tomato Soup", .42, "eaches")},
+            {"Bananas", new StockItem("Bananas", .45, "byWeight")}
         };
 
         public Program()
@@ -32,6 +30,20 @@ namespace CheckoutOrder
         {
             StockItem itemToScan = ItemsAvailableForSale[itemName];
             TotalGroceryBill = TotalGroceryBill + itemToScan.UnitPrice;
+        }
+
+        public void ScanItem(string itemName, double itemWeight)
+        {
+            StockItem itemToScan = ItemsAvailableForSale[itemName];
+            if (itemToScan.PriceCategory == "eaches")
+            {
+                ScanItem(itemName);
+            }
+            else if (itemToScan.PriceCategory == "byWeight")
+            {
+                double itemPrice = itemWeight * itemToScan.UnitPrice;
+                TotalGroceryBill += itemPrice;
+            }
         }
 
         public void MarkDownItem(string itemName, double newPrice)
