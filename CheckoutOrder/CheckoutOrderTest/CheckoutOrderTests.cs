@@ -19,26 +19,22 @@ namespace CheckoutOrderTest
         [Fact]
         public void ScanItem()
         {
-            CheckoutItem itemToScan = new CheckoutItem("TestItem", 2);
-            itemToScan.CurrentPrice = 2.0;
-            _checkoutOrderUnderTest.ScanItem(itemToScan);
+            _checkoutOrderUnderTest.ScanItem("Tomato Soup");
             Assert.Equal(2.0, _checkoutOrderUnderTest.TotalGroceryBill);
         }
 
         [Fact]
         public void ScanItemTwiceAndReturnTotal()
         {
-            CheckoutItem itemToScan = new CheckoutItem("TestItem", 2);
-            itemToScan.CurrentPrice = 2.0;
-            _checkoutOrderUnderTest.ScanItem(itemToScan);
-            _checkoutOrderUnderTest.ScanItem(itemToScan);
+            _checkoutOrderUnderTest.ScanItem("Tomato Soup");
+            _checkoutOrderUnderTest.ScanItem("Tomato Soup");
             Assert.Equal(4.0, _checkoutOrderUnderTest.TotalGroceryBill);
         }
 
         [Fact]
         public void ScanItemFromInventoryOnce()
         {
-            _checkoutOrderUnderTest.ScanItem(_checkoutOrderUnderTest.ItemsAvailableForSale["Tomato Soup"]);
+            _checkoutOrderUnderTest.ScanItem("Tomato Soup");
             Assert.Equal(.42, _checkoutOrderUnderTest.TotalGroceryBill);
         }
 
@@ -46,8 +42,7 @@ namespace CheckoutOrderTest
         public void MarkDownItemFromInventory()
         {
             _checkoutOrderUnderTest.MarkDownItem("Tomato Soup", .37);
-            CheckoutItem itemToScan = _checkoutOrderUnderTest.ItemsAvailableForSale["Tomato Soup"];
-            _checkoutOrderUnderTest.ScanItem(itemToScan);
+            _checkoutOrderUnderTest.ScanItem("Tomato Soup");
             Assert.Equal(.37, _checkoutOrderUnderTest.TotalGroceryBill);
         }
     }

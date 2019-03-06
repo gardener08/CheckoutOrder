@@ -25,12 +25,12 @@ namespace CheckoutOrder
         static void Main(string[] args)
         {
             Program programToRun = new Program();
-            CheckoutItem itemToScan = new CheckoutItem("Test", 0);
-            programToRun.ScanItem(itemToScan);
+            programToRun.ScanItem("Tomato Soup");
         }
 
-        public void ScanItem(CheckoutItem itemToScan)
+        public void ScanItem(string itemName)
         {
+            CheckoutItem itemToScan = ItemsAvailableForSale[itemName];
             TotalGroceryBill = TotalGroceryBill + itemToScan.CurrentPrice;
         }
 
