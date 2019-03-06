@@ -8,6 +8,12 @@ namespace CheckoutOrder
 {
     public class Program
     {
+        public double TotalGroceryBill { get; set; }
+
+        public Program()
+        {
+            TotalGroceryBill = 0;
+        }
         static void Main(string[] args)
         {
             Program programToRun = new Program();
@@ -17,6 +23,7 @@ namespace CheckoutOrder
 
         public double ScanItem(CheckoutItem itemToScan)
         {
+            TotalGroceryBill = TotalGroceryBill + itemToScan.CurrentPrice;
             return itemToScan.CurrentPrice;
         }
     }

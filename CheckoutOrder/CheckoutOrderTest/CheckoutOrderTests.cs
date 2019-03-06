@@ -24,5 +24,15 @@ namespace CheckoutOrderTest
             double totalBill = _checkoutOrderUnderTest.ScanItem(itemToScan);
             Assert.Equal(2.0, totalBill);
         }
+
+        [Fact]
+        public void ScanItemTwiceAndReturnTotal()
+        {
+            CheckoutItem itemToScan = new CheckoutItem();
+            itemToScan.CurrentPrice = 2.0;
+            _checkoutOrderUnderTest.ScanItem(itemToScan);
+            _checkoutOrderUnderTest.ScanItem(itemToScan);
+            Assert.Equal(4.0, _checkoutOrderUnderTest.TotalGroceryBill);
+        }
     }
 }
