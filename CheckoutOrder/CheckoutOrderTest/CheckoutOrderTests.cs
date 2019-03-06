@@ -41,5 +41,14 @@ namespace CheckoutOrderTest
             _checkoutOrderUnderTest.ScanItem(_checkoutOrderUnderTest.ItemsAvailableForSale["Tomato Soup"]);
             Assert.Equal(.42, _checkoutOrderUnderTest.TotalGroceryBill);
         }
+
+        [Fact]
+        public void MarkDownItemFromInventory()
+        {
+            _checkoutOrderUnderTest.MarkDownItem("Tomato Soup", .37);
+            CheckoutItem itemToScan = _checkoutOrderUnderTest.ItemsAvailableForSale["Tomato Soup"];
+            _checkoutOrderUnderTest.ScanItem(itemToScan);
+            Assert.Equal(.37, _checkoutOrderUnderTest.TotalGroceryBill);
+        }
     }
 }

@@ -33,6 +33,11 @@ namespace CheckoutOrder
         {
             TotalGroceryBill = TotalGroceryBill + itemToScan.CurrentPrice;
         }
+
+        public void MarkDownItem(string itemName, double newPrice)
+        {
+            ItemsAvailableForSale[itemName].CurrentPrice = newPrice;
+        }
     }
 
     public class CheckoutItem
