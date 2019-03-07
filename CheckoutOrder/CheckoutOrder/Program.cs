@@ -29,8 +29,29 @@ namespace CheckoutOrder
         public void ScanItem(string itemName)
         {
             StockItem itemToScan = ItemsAvailableForSale[itemName];
-            double priceWithMarkdown = itemToScan.UnitPrice - itemToScan.Markdown;
-            TotalGroceryBill = TotalGroceryBill + priceWithMarkdown;
+            QuantityDiscount qtyDiscount = itemToScan.QtyDiscount;
+            if (qtyDiscount != null)
+            {
+                bool discountEligible = itemToScan.NumberOfThisItemInCart >= qtyDiscount.QuantityToGetDiscount;
+                bool discountExceeded =
+                    itemToScan.NumberOfThisItemInCart >=
+                    (qtyDiscount.QuantityToGetDiscount + qtyDiscount.QuantityUnderDiscount);
+                if (discountEligible && !discountExceeded)
+                {
+                    double priceWithDiscount = itemToScan.UnitPrice - (itemToScan.UnitPrice*qtyDiscount.Discount);
+                    TotalGroceryBill += priceWithDiscount;
+                }
+                else
+                {
+                    TotalGroceryBill += itemToScan.UnitPrice;
+                }
+            }
+            else
+            {
+                double priceWithMarkdown = itemToScan.UnitPrice - itemToScan.Markdown;
+                TotalGroceryBill = TotalGroceryBill + priceWithMarkdown;
+            }
+            itemToScan.NumberOfThisItemInCart++;
         }
 
         public void ScanItem(string itemName, double itemWeight)
@@ -51,6 +72,17 @@ namespace CheckoutOrder
         {
             ItemsAvailableForSale[itemName].Markdown = markdown;
         }
+
+        public void ApplyQuantityDiscount(string itemName, int quantityToGetDiscount, int quantityUnderDiscount, double discount)
+        {
+            StockItem itemToScan = ItemsAvailableForSale[itemName];
+            itemToScan.QtyDiscount = new QuantityDiscount()
+            {
+                QuantityToGetDiscount = quantityToGetDiscount,
+                QuantityUnderDiscount = quantityUnderDiscount,
+                Discount = discount
+            };
+        }
     }
 
     public class StockItem
@@ -59,6 +91,15 @@ namespace CheckoutOrder
         public double UnitPrice { get; set; }
         public double Markdown { get; set; }
         public string PriceCategory { get; set; }
+        public QuantityDiscount QtyDiscount { get; set; }
+        public int NumberOfThisItemInCart { get; set; }
+    }
+
+    public class QuantityDiscount
+    {
+        public int QuantityToGetDiscount { get; set; }
+        public int QuantityUnderDiscount { get; set; }
+        public double Discount { get; set; }
     }
 
 }

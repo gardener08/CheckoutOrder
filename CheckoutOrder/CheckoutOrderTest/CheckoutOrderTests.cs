@@ -70,5 +70,24 @@ namespace CheckoutOrderTest
             _checkoutOrderUnderTest.ScanItem("Bananas", 1.0);
             Assert.Equal(.40, _checkoutOrderUnderTest.TotalGroceryBill);
         }
+
+        [Fact]
+        public void BuySomeGetSomeMoreAtADiscountEaches()
+        {
+            _checkoutOrderUnderTest.ApplyQuantityDiscount("Tomato Soup", 1, 1, 0.5);
+            _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
+            _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
+            Assert.Equal(.63, _checkoutOrderUnderTest.TotalGroceryBill);
+        }
+
+        [Fact]
+        public void BuySomeGetSomeMoreAtADiscountAndThenLoseTheDiscountEaches()
+        {
+            _checkoutOrderUnderTest.ApplyQuantityDiscount("Tomato Soup", 1, 1, 0.5);
+            _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
+            _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
+            _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
+            Assert.Equal(1.05, _checkoutOrderUnderTest.TotalGroceryBill);
+        }
     }
 }
