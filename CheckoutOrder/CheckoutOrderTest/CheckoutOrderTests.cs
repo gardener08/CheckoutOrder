@@ -62,5 +62,13 @@ namespace CheckoutOrderTest
             _checkoutOrderUnderTest.ScanItem("Bananas", 1.0);
             Assert.Equal(1.86, _checkoutOrderUnderTest.TotalGroceryBill, 2);
         }
+
+        [Fact]
+        public void MarkDownByWeightItemFromInventory()
+        {
+            _checkoutOrderUnderTest.MarkDownItem("Bananas", .05);
+            _checkoutOrderUnderTest.ScanItem("Bananas", 1.0);
+            Assert.Equal(.40, _checkoutOrderUnderTest.TotalGroceryBill);
+        }
     }
 }

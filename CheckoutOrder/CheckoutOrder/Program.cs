@@ -42,7 +42,7 @@ namespace CheckoutOrder
             }
             else if (itemToScan.PriceCategory == "byWeight")
             {
-                double itemPrice = itemWeight * itemToScan.UnitPrice;
+                double itemPrice = (itemToScan.UnitPrice - itemToScan.Markdown) * itemWeight;
                 TotalGroceryBill += itemPrice;
             }
         }
