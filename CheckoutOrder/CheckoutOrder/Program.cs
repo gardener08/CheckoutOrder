@@ -106,15 +106,34 @@ namespace CheckoutOrder
         public bool GroupingDiscountValid(StockItem item)
         {
             GroupDiscount grpDiscount = item.GrpDiscount;
-            bool discountEligible = (item.NumberOfThisItemInCart == grpDiscount.QuantityToGetDiscount);
-            if (discountEligible)
+            if (grpDiscount != null)
             {
-                return true;
+                bool discountEligible = (item.NumberOfThisItemInCart == grpDiscount.QuantityToGetDiscount);
+                if (discountEligible)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
                 return false;
             }
+
+        }
+
+        public void ApplyGroupingDiscountToItemForSale(string itemName, int quantityToGetDiscount, double priceForGroup)
+        {
+            StockItem itemToScan = ItemsAvailableForSale[itemName];
+            GroupDiscount grpDiscount = new GroupDiscount()
+            {
+                PriceForGroup = priceForGroup,
+                QuantityToGetDiscount = quantityToGetDiscount
+            };
+            itemToScan.GrpDiscount = grpDiscount;
         }
 
         public void ApplyQuantityDiscount(string itemName, int quantityToGetDiscount, int quantityUnderDiscount, double discount)
@@ -150,6 +169,7 @@ namespace CheckoutOrder
     public class GroupDiscount
     {
         public int QuantityToGetDiscount { get; set; }
+        public double PriceForGroup { get; set; }
     }
 
 }

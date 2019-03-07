@@ -181,5 +181,24 @@ namespace CheckoutOrderTest
             Assert.True(quantityDiscountValid);
         }
 
+        [Fact]
+        public void ApplyGroupingDiscount()
+        {
+            GroupDiscount grpDiscount = new GroupDiscount()
+            {
+                QuantityToGetDiscount = 3,
+                PriceForGroup = 5
+            };
+            _checkoutOrderUnderTest.ApplyGroupingDiscountToItemForSale("Tomato Soup", 3, 5.00);
+            StockItem tomatoSoupItem = _checkoutOrderUnderTest.ItemsAvailableForSale["Tomato Soup"];
+            AssertThatGroupingDiscountObjectsAreEqual(grpDiscount, tomatoSoupItem.GrpDiscount);
+        }
+
+        private void AssertThatGroupingDiscountObjectsAreEqual(GroupDiscount expectedDiscount, GroupDiscount actualDiscount)
+        {
+            Assert.Equal(expectedDiscount.QuantityToGetDiscount, actualDiscount.QuantityToGetDiscount);
+            Assert.Equal(expectedDiscount.PriceForGroup, actualDiscount.PriceForGroup);
+        }
+
     }
 }
