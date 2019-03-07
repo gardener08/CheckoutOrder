@@ -41,9 +41,9 @@ namespace CheckoutOrderTest
         [Fact]
         public void MarkDownItemFromInventory()
         {
-            _checkoutOrderUnderTest.MarkDownItem("Tomato Soup", .37);
+            _checkoutOrderUnderTest.MarkDownItem("Tomato Soup", .04);
             _checkoutOrderUnderTest.ScanItem("Tomato Soup");
-            Assert.Equal(.37, _checkoutOrderUnderTest.TotalGroceryBill);
+            Assert.Equal(.38, _checkoutOrderUnderTest.TotalGroceryBill);
         }
 
         [Fact]
