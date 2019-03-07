@@ -12,8 +12,8 @@ namespace CheckoutOrder
 
         public readonly IDictionary<string,StockItem> ItemsAvailableForSale = new Dictionary<string, StockItem>
         {
-            {"Tomato Soup", new StockItem("Tomato Soup", .42, 0, "eaches")},
-            {"Bananas", new StockItem("Bananas", .45, 0, "byWeight")}
+            {"Tomato Soup", new StockItem { ItemName="Tomato Soup", UnitPrice = .42, Markdown = 0, PriceCategory = "eaches"}},
+            {"Bananas", new StockItem { ItemName = "Bananas", UnitPrice = .45, Markdown = 0, PriceCategory = "byWeight"}}
         };
 
         public Program()
@@ -59,14 +59,6 @@ namespace CheckoutOrder
         public double UnitPrice { get; set; }
         public double Markdown { get; set; }
         public string PriceCategory { get; set; }
-
-        public StockItem(string itemName, double unitPrice, double markdown, string priceCategory)
-        {
-            ItemName = itemName;
-            UnitPrice = unitPrice;
-            Markdown = Markdown;
-            PriceCategory = priceCategory;
-        }
     }
 
 }
