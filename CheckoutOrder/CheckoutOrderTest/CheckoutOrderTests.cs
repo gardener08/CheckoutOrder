@@ -162,5 +162,24 @@ namespace CheckoutOrderTest
             Assert.Equal(5.00, _checkoutOrderUnderTest.TotalGroceryBill);
         }
 
+        [Fact]
+        public void ValidGroupingDiscount()
+        {
+            GroupDiscount grpDiscount = new GroupDiscount()
+            {
+                QuantityToGetDiscount = 3
+            };
+            StockItem itemToScan = new StockItem()
+            {
+                ItemName = "TestItem",
+                PriceCategory = "eaches",
+                UnitPrice = 2.0,
+                GrpDiscount = grpDiscount,
+                NumberOfThisItemInCart = 3
+            };
+            bool quantityDiscountValid = _checkoutOrderUnderTest.GroupingDiscountValid(itemToScan);
+            Assert.True(quantityDiscountValid);
+        }
+
     }
 }
