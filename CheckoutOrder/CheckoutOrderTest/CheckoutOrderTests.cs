@@ -53,5 +53,14 @@ namespace CheckoutOrderTest
             Assert.Equal(.99, _checkoutOrderUnderTest.TotalGroceryBill, 2);
 
         }
+
+        [Fact]
+        public void ScanMultipleWeightedAndEachesItems()
+        {
+            _checkoutOrderUnderTest.ScanItem("Bananas", 2.2);
+            _checkoutOrderUnderTest.ScanItem("Tomato Soup");
+            _checkoutOrderUnderTest.ScanItem("Bananas", 1.0);
+            Assert.Equal(1.86, _checkoutOrderUnderTest.TotalGroceryBill, 2);
+        }
     }
 }
