@@ -89,5 +89,66 @@ namespace CheckoutOrderTest
             _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
             Assert.Equal(1.05, _checkoutOrderUnderTest.TotalGroceryBill);
         }
+
+        [Fact]
+        public void ValidQuantityDiscount()
+        {
+            QuantityDiscount qtyDiscount = new QuantityDiscount()
+            { 
+                Discount = 1.0, QuantityToGetDiscount = 1, QuantityUnderDiscount = 1
+            };
+            StockItem itemToScan = new StockItem()
+            {
+                ItemName = "TestItem",
+                PriceCategory = "eaches",
+                UnitPrice = 2.0,
+                QtyDiscount = qtyDiscount,
+                NumberOfThisItemInCart = 1
+            };
+            bool quantityDiscountValid = _checkoutOrderUnderTest.QuantityDiscountValid(itemToScan);
+            Assert.True(quantityDiscountValid);
+        }
+
+        [Fact]
+        public void InvalidQuantityDiscountBeyondQuantityLimit()
+        {
+            QuantityDiscount qtyDiscount = new QuantityDiscount()
+            {
+                Discount = 1.0,
+                QuantityToGetDiscount = 1,
+                QuantityUnderDiscount = 1
+            };
+            StockItem itemToScan = new StockItem()
+            {
+                ItemName = "TestItem",
+                PriceCategory = "eaches",
+                UnitPrice = 2.0,
+                QtyDiscount = qtyDiscount,
+                NumberOfThisItemInCart = 2
+            };
+            bool quantityDiscountValid = _checkoutOrderUnderTest.QuantityDiscountValid(itemToScan);
+            Assert.False(quantityDiscountValid);
+        }
+
+        [Fact]
+        public void InvalidQuantityDiscountDidntBuyEnoughToGetDiscount()
+        {
+            QuantityDiscount qtyDiscount = new QuantityDiscount()
+            {
+                Discount = 1.0,
+                QuantityToGetDiscount = 1,
+                QuantityUnderDiscount = 1
+            };
+            StockItem itemToScan = new StockItem()
+            {
+                ItemName = "TestItem",
+                PriceCategory = "eaches",
+                UnitPrice = 2.0,
+                QtyDiscount = qtyDiscount,
+                NumberOfThisItemInCart = 0
+            };
+            bool quantityDiscountValid = _checkoutOrderUnderTest.QuantityDiscountValid(itemToScan);
+            Assert.False(quantityDiscountValid);
+        }
     }
 }

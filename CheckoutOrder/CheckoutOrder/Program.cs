@@ -26,34 +26,29 @@ namespace CheckoutOrder
             programToRun.ScanItem("Tomato Soup");
         }
 
+        // TODO: Refactor ScanItem methods.  They are getting too complex.
         public void ScanItem(string itemName)
         {
             StockItem itemToScan = ItemsAvailableForSale[itemName];
-            QuantityDiscount qtyDiscount = itemToScan.QtyDiscount;
-            if (qtyDiscount != null)
+            if (QuantityDiscountValid(itemToScan))
             {
-                bool discountEligible = itemToScan.NumberOfThisItemInCart >= qtyDiscount.QuantityToGetDiscount;
-                bool discountExceeded =
-                    itemToScan.NumberOfThisItemInCart >=
-                    (qtyDiscount.QuantityToGetDiscount + qtyDiscount.QuantityUnderDiscount);
-                if (discountEligible && !discountExceeded)
-                {
-                    double priceWithDiscount = itemToScan.UnitPrice - (itemToScan.UnitPrice*qtyDiscount.Discount);
-                    TotalGroceryBill += priceWithDiscount;
-                }
-                else
-                {
-                    TotalGroceryBill += itemToScan.UnitPrice;
-                }
+                QuantityDiscount qtyDiscount = itemToScan.QtyDiscount;
+                double priceWithDiscount = itemToScan.UnitPrice - (itemToScan.UnitPrice * qtyDiscount.Discount);
+                TotalGroceryBill += priceWithDiscount;
             }
-            else
+            else if (itemToScan.Markdown > 0)
             {
                 double priceWithMarkdown = itemToScan.UnitPrice - itemToScan.Markdown;
                 TotalGroceryBill = TotalGroceryBill + priceWithMarkdown;
             }
+            else
+            {
+                TotalGroceryBill += itemToScan.UnitPrice;
+            }
             itemToScan.NumberOfThisItemInCart++;
         }
 
+        // TODO: Implement quantity based pricing for items by weight.
         public void ScanItem(string itemName, double itemWeight)
         {
             StockItem itemToScan = ItemsAvailableForSale[itemName];
@@ -71,6 +66,30 @@ namespace CheckoutOrder
         public void MarkDownItem(string itemName, double markdown)
         {
             ItemsAvailableForSale[itemName].Markdown = markdown;
+        }
+
+        public bool QuantityDiscountValid(StockItem item)
+        {
+            QuantityDiscount qtyDiscount = item.QtyDiscount;
+            if (qtyDiscount != null)
+            {
+                bool discountEligible = item.NumberOfThisItemInCart >= qtyDiscount.QuantityToGetDiscount;
+                bool discountExceeded =
+                    item.NumberOfThisItemInCart >=
+                    (qtyDiscount.QuantityToGetDiscount + qtyDiscount.QuantityUnderDiscount);
+                if (discountEligible && !discountExceeded)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public void ApplyQuantityDiscount(string itemName, int quantityToGetDiscount, int quantityUnderDiscount, double discount)
