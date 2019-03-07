@@ -150,5 +150,17 @@ namespace CheckoutOrderTest
             bool quantityDiscountValid = _checkoutOrderUnderTest.QuantityDiscountValid(itemToScan);
             Assert.False(quantityDiscountValid);
         }
+
+        [Fact]
+        public void BuySomeGetSomeMoreAtADiscountByWeight()
+        {
+            _checkoutOrderUnderTest.ApplyQuantityDiscount("Oranges", 2, 1, 0.5);
+            _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
+            _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
+            _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
+
+            Assert.Equal(5.00, _checkoutOrderUnderTest.TotalGroceryBill);
+        }
+
     }
 }

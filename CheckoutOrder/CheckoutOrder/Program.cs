@@ -13,7 +13,8 @@ namespace CheckoutOrder
         public readonly IDictionary<string,StockItem> ItemsAvailableForSale = new Dictionary<string, StockItem>
         {
             {"Tomato Soup", new StockItem { ItemName="Tomato Soup", UnitPrice = .42, Markdown = 0, PriceCategory = "eaches"}},
-            {"Bananas", new StockItem { ItemName = "Bananas", UnitPrice = .45, Markdown = 0, PriceCategory = "byWeight"}}
+            {"Bananas", new StockItem { ItemName = "Bananas", UnitPrice = .45, Markdown = 0, PriceCategory = "byWeight"}},
+            {"Oranges", new StockItem { ItemName = "Oranges", UnitPrice = 1.00, Markdown = 0, PriceCategory = "byWeight"}}
         };
 
         public Program()
@@ -48,7 +49,6 @@ namespace CheckoutOrder
             itemToScan.NumberOfThisItemInCart++;
         }
 
-        // TODO: Implement quantity based pricing for items by weight.
         public void ScanItem(string itemName, double itemWeight)
         {
             StockItem itemToScan = ItemsAvailableForSale[itemName];
@@ -58,8 +58,19 @@ namespace CheckoutOrder
             }
             else if (itemToScan.PriceCategory == "byWeight")
             {
-                double itemPrice = (itemToScan.UnitPrice - itemToScan.Markdown) * itemWeight;
-                TotalGroceryBill += itemPrice;
+                if (QuantityDiscountValid(itemToScan))
+                {
+                    QuantityDiscount qtyDiscount = itemToScan.QtyDiscount;
+                    double unitPriceWithDiscount = itemToScan.UnitPrice - (itemToScan.UnitPrice * qtyDiscount.Discount);
+                    double itemPrice = unitPriceWithDiscount * itemWeight;
+                    TotalGroceryBill += itemPrice;
+                }
+                else
+                {
+                    double itemPrice = (itemToScan.UnitPrice - itemToScan.Markdown) * itemWeight;
+                    TotalGroceryBill += itemPrice;
+                }
+                itemToScan.NumberOfThisItemInCart++;
             }
         }
 
