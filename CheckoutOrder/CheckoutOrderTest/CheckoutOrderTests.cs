@@ -222,7 +222,17 @@ namespace CheckoutOrderTest
         {
             _checkoutOrderUnderTest.ScanItem("Bananas", 2.2);
             Assert.Equal(.99, _checkoutOrderUnderTest.ComputeTotalBill(), 2);
+        }
 
+        [Fact]
+        public void BuySomeGetSomeMoreAtADiscountByWeightComputeTotalBill()
+        {
+            _checkoutOrderUnderTest.ApplyQuantityDiscount("Oranges", 2, 1, 0.5);
+            _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
+            _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
+            _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
+
+            Assert.Equal(5.00, _checkoutOrderUnderTest.ComputeTotalBill());
         }
 
     }

@@ -90,6 +90,12 @@ namespace CheckoutOrder
                     double unitPriceWithDiscount = itemToScan.UnitPrice - (itemToScan.UnitPrice * qtyDiscount.Discount);
                     double itemPrice = unitPriceWithDiscount * itemWeight;
                     TotalGroceryBill += itemPrice;
+                    ShoppingCartItem currentItemBeingScanned = new ShoppingCartItem()
+                    {
+                        UnitPrice = unitPriceWithDiscount,
+                        ItemPrice = itemPrice
+                    };
+                    ShoppingCart[itemName].Add(currentItemBeingScanned);
                 }
                 else
                 {
