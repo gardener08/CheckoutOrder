@@ -55,6 +55,12 @@ namespace CheckoutOrder
             {
                 double priceWithMarkdown = itemToScan.UnitPrice - itemToScan.Markdown;
                 TotalGroceryBill = TotalGroceryBill + priceWithMarkdown;
+                ShoppingCartItem currentItemBeingScanned = new ShoppingCartItem()
+                {
+                    UnitPrice = priceWithMarkdown,
+                    ItemPrice = priceWithMarkdown
+                };
+                ShoppingCart[itemName].Add(currentItemBeingScanned);
             }
             else
             {

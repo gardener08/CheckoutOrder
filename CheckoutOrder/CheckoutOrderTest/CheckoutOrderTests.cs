@@ -209,5 +209,13 @@ namespace CheckoutOrderTest
             Assert.Equal(.63, _checkoutOrderUnderTest.ComputeTotalBill());
         }
 
+        [Fact]
+        public void BuyAMarkedDownItemComputeTotalBill()
+        {
+            _checkoutOrderUnderTest.MarkDownItem("Tomato Soup", .04);
+            _checkoutOrderUnderTest.ScanItem("Tomato Soup");
+            Assert.Equal(.38, _checkoutOrderUnderTest.ComputeTotalBill());
+        }
+
     }
 }
