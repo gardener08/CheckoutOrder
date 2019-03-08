@@ -93,8 +93,15 @@ namespace CheckoutOrder
                 }
                 else
                 {
-                    double itemPrice = (itemToScan.UnitPrice - itemToScan.Markdown) * itemWeight;
+                    double unitPrice = itemToScan.UnitPrice - itemToScan.Markdown;
+                    double itemPrice = unitPrice * itemWeight;
                     TotalGroceryBill += itemPrice;
+                    ShoppingCartItem currentItemBeingScanned = new ShoppingCartItem()
+                    {
+                        UnitPrice = unitPrice,
+                        ItemPrice = itemPrice
+                    };
+                    ShoppingCart[itemName].Add(currentItemBeingScanned);
                 }
                 itemToScan.NumberOfThisItemInCart++;
             }
