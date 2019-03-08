@@ -17,9 +17,17 @@ namespace CheckoutOrder
             {"Oranges", new StockItem { ItemName = "Oranges", UnitPrice = 1.00, Markdown = 0, PriceCategory = "byWeight"}}
         };
 
+        public IDictionary<string, IList<ShoppingCartItem>> ShoppingCart { get; }
+
         public Program()
         {
             TotalGroceryBill = 0;
+            ShoppingCart = new Dictionary<string, IList<ShoppingCartItem>>()
+            {
+                {"Tomato Soup", new List<ShoppingCartItem>()},
+                {"Bananas", new List<ShoppingCartItem>()},
+                {"Oranges", new List<ShoppingCartItem>()}
+            };
         }
         static void Main(string[] args)
         {
@@ -36,6 +44,12 @@ namespace CheckoutOrder
                 QuantityDiscount qtyDiscount = itemToScan.QtyDiscount;
                 double priceWithDiscount = itemToScan.UnitPrice - (itemToScan.UnitPrice * qtyDiscount.Discount);
                 TotalGroceryBill += priceWithDiscount;
+                ShoppingCartItem currentItemBeingScanned = new ShoppingCartItem()
+                {
+                    UnitPrice = priceWithDiscount,
+                    ItemPrice = priceWithDiscount
+                };
+                ShoppingCart[itemName].Add(currentItemBeingScanned);
             }
             else if (itemToScan.Markdown > 0)
             {
@@ -172,4 +186,14 @@ namespace CheckoutOrder
         public double PriceForGroup { get; set; }
     }
 
+    public class ShoppingCartItem : IComparable<ShoppingCartItem>
+    {
+        public double UnitPrice { get; set; }
+        public double ItemPrice { get; set; }
+
+        public int CompareTo(ShoppingCartItem itemToCompare)
+        {
+            return this.ItemPrice.CompareTo(itemToCompare.ItemPrice);
+        }
+    }
 }
