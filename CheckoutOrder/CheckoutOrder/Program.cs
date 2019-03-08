@@ -59,6 +59,12 @@ namespace CheckoutOrder
             else
             {
                 TotalGroceryBill += itemToScan.UnitPrice;
+                ShoppingCartItem currentItemBeingScanned = new ShoppingCartItem()
+                {
+                    UnitPrice = itemToScan.UnitPrice,
+                    ItemPrice = itemToScan.UnitPrice
+                };
+                ShoppingCart[itemName].Add(currentItemBeingScanned);
             }
             itemToScan.NumberOfThisItemInCart++;
         }
@@ -159,6 +165,20 @@ namespace CheckoutOrder
                 QuantityUnderDiscount = quantityUnderDiscount,
                 Discount = discount
             };
+        }
+
+        public double ComputeTotalBill()
+        {
+            double totalBill = 0;
+            foreach (string key in ShoppingCart.Keys)
+            {
+                IList<ShoppingCartItem> cartItemsWithThisDescription = ShoppingCart[key];
+                foreach (ShoppingCartItem item in cartItemsWithThisDescription)
+                {
+                    totalBill += item.ItemPrice;
+                }
+            }
+            return totalBill;
         }
     }
 

@@ -200,5 +200,14 @@ namespace CheckoutOrderTest
             Assert.Equal(expectedDiscount.PriceForGroup, actualDiscount.PriceForGroup);
         }
 
+        [Fact]
+        public void BuySomeGetSomeMoreAtADiscountEachesComputeTotalBill()
+        {
+            _checkoutOrderUnderTest.ApplyQuantityDiscount("Tomato Soup", 1, 1, 0.5);
+            _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
+            _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
+            Assert.Equal(.63, _checkoutOrderUnderTest.ComputeTotalBill());
+        }
+
     }
 }
