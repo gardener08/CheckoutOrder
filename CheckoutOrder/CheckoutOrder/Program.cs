@@ -43,7 +43,6 @@ namespace CheckoutOrder
             {
                 QuantityDiscount qtyDiscount = itemToScan.QtyDiscount;
                 double priceWithDiscount = itemToScan.UnitPrice - (itemToScan.UnitPrice * qtyDiscount.Discount);
-                TotalGroceryBill += priceWithDiscount;
                 ShoppingCartItem currentItemBeingScanned = new ShoppingCartItem()
                 {
                     UnitPrice = priceWithDiscount,
@@ -54,7 +53,6 @@ namespace CheckoutOrder
             else if (itemToScan.Markdown > 0)
             {
                 double priceWithMarkdown = itemToScan.UnitPrice - itemToScan.Markdown;
-                TotalGroceryBill = TotalGroceryBill + priceWithMarkdown;
                 ShoppingCartItem currentItemBeingScanned = new ShoppingCartItem()
                 {
                     UnitPrice = priceWithMarkdown,
@@ -64,7 +62,6 @@ namespace CheckoutOrder
             }
             else
             {
-                TotalGroceryBill += itemToScan.UnitPrice;
                 ShoppingCartItem currentItemBeingScanned = new ShoppingCartItem()
                 {
                     UnitPrice = itemToScan.UnitPrice,
@@ -73,6 +70,7 @@ namespace CheckoutOrder
                 ShoppingCart[itemName].Add(currentItemBeingScanned);
             }
             itemToScan.NumberOfThisItemInCart++;
+            ComputeTotalBill();
         }
 
         public void ScanItem(string itemName, double itemWeight)
@@ -89,7 +87,6 @@ namespace CheckoutOrder
                     QuantityDiscount qtyDiscount = itemToScan.QtyDiscount;
                     double unitPriceWithDiscount = itemToScan.UnitPrice - (itemToScan.UnitPrice * qtyDiscount.Discount);
                     double itemPrice = unitPriceWithDiscount * itemWeight;
-                    TotalGroceryBill += itemPrice;
                     ShoppingCartItem currentItemBeingScanned = new ShoppingCartItem()
                     {
                         UnitPrice = unitPriceWithDiscount,
@@ -101,7 +98,6 @@ namespace CheckoutOrder
                 {
                     double unitPrice = itemToScan.UnitPrice - itemToScan.Markdown;
                     double itemPrice = unitPrice * itemWeight;
-                    TotalGroceryBill += itemPrice;
                     ShoppingCartItem currentItemBeingScanned = new ShoppingCartItem()
                     {
                         UnitPrice = unitPrice,
@@ -111,6 +107,7 @@ namespace CheckoutOrder
                 }
                 itemToScan.NumberOfThisItemInCart++;
             }
+            ComputeTotalBill();
         }
 
         public void MarkDownItem(string itemName, double markdown)
@@ -197,6 +194,7 @@ namespace CheckoutOrder
                     totalBill += item.ItemPrice;
                 }
             }
+            this.TotalGroceryBill = totalBill;
             return totalBill;
         }
     }
