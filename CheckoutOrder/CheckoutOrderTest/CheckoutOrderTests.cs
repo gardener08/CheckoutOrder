@@ -163,6 +163,17 @@ namespace CheckoutOrderTest
         }
 
         [Fact]
+        public void BuySomeGetSomeMoreOfEqualOrLesserValueAtADiscountByWeight()
+        {
+            _checkoutOrderUnderTest.ApplyQuantityDiscount("Oranges", 2, 1, 0.5);
+            _checkoutOrderUnderTest.ScanItem("Oranges", 4.0);
+            _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
+            _checkoutOrderUnderTest.ScanItem("Oranges", 3.0);
+
+            Assert.Equal(8.00, _checkoutOrderUnderTest.TotalGroceryBill);
+        }
+
+        [Fact]
         public void ValidGroupingDiscount()
         {
             GroupDiscount grpDiscount = new GroupDiscount()

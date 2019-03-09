@@ -84,15 +84,14 @@ namespace CheckoutOrder
             {
                 if (QuantityDiscountValid(itemToScan))
                 {
-                    QuantityDiscount qtyDiscount = itemToScan.QtyDiscount;
-                    double unitPriceWithDiscount = itemToScan.UnitPrice - (itemToScan.UnitPrice * qtyDiscount.Discount);
-                    double itemPrice = unitPriceWithDiscount * itemWeight;
                     ShoppingCartItem currentItemBeingScanned = new ShoppingCartItem()
                     {
-                        UnitPrice = unitPriceWithDiscount,
-                        ItemPrice = itemPrice
+                        UnitPrice = itemToScan.UnitPrice,
+                        ItemPrice = itemToScan.UnitPrice * itemWeight,
+                        ItemWeight = itemWeight
                     };
                     ShoppingCart[itemName].Add(currentItemBeingScanned);
+                    ApplyQuantityDiscountForWeighedItemAtSale(itemName);
                 }
                 else
                 {
@@ -101,7 +100,8 @@ namespace CheckoutOrder
                     ShoppingCartItem currentItemBeingScanned = new ShoppingCartItem()
                     {
                         UnitPrice = unitPrice,
-                        ItemPrice = itemPrice
+                        ItemPrice = itemPrice,
+                        ItemWeight = itemWeight
                     };
                     ShoppingCart[itemName].Add(currentItemBeingScanned);
                 }
@@ -183,6 +183,26 @@ namespace CheckoutOrder
             };
         }
 
+        private void ApplyQuantityDiscountForWeighedItemAtSale(string itemName)
+        {
+            List<ShoppingCartItem> shoppingCartItemsOfThisType = (List<ShoppingCartItem>)(ShoppingCart[itemName]);
+            shoppingCartItemsOfThisType.Sort();
+
+            StockItem inventoryItemOfThisType = ItemsAvailableForSale[itemName];
+            QuantityDiscount qtyDiscount = inventoryItemOfThisType.QtyDiscount;
+            double unitPriceWithDiscount = inventoryItemOfThisType.UnitPrice - (inventoryItemOfThisType.UnitPrice * qtyDiscount.Discount);
+
+            int firstItemToGetDiscountByPosition = qtyDiscount.QuantityToGetDiscount;
+            int lastItemToGetDiscountByPosition = firstItemToGetDiscountByPosition + (qtyDiscount.QuantityUnderDiscount - 1);
+            for (int currentItemIndex = firstItemToGetDiscountByPosition; currentItemIndex <= lastItemToGetDiscountByPosition; currentItemIndex++)
+            {
+                ShoppingCartItem itemToApplyDiscountTo = shoppingCartItemsOfThisType.ElementAt(currentItemIndex);
+                double itemPrice = unitPriceWithDiscount * itemToApplyDiscountTo.ItemWeight;
+                itemToApplyDiscountTo.UnitPrice = unitPriceWithDiscount;
+                itemToApplyDiscountTo.ItemPrice = itemPrice;
+            }
+        }
+
         public double ComputeTotalBill()
         {
             double totalBill = 0;
@@ -227,10 +247,12 @@ namespace CheckoutOrder
     {
         public double UnitPrice { get; set; }
         public double ItemPrice { get; set; }
+        public double ItemWeight { get; set; }
 
+        // Sort in descending order
         public int CompareTo(ShoppingCartItem itemToCompare)
         {
-            return this.ItemPrice.CompareTo(itemToCompare.ItemPrice);
+            return itemToCompare.ItemPrice.CompareTo(this.ItemPrice);
         }
     }
 }
