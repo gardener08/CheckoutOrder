@@ -37,39 +37,20 @@ namespace CheckoutOrder
             programToRun.ScanItem("Tomato Soup");
         }
 
-        // TODO: Refactor ScanItem methods.  They are getting too complex.
         public void ScanItem(string itemName)
         {
             StockItem itemToScan = ItemsAvailableForSale[itemName];
             if (QuantityDiscountValid(itemToScan))
             {
-                QuantityDiscount qtyDiscount = itemToScan.QtyDiscount;
-                double priceWithDiscount = itemToScan.UnitPrice - (itemToScan.UnitPrice * qtyDiscount.Discount);
-                ShoppingCartItem currentItemBeingScanned = new ShoppingCartItem()
-                {
-                    UnitPrice = priceWithDiscount,
-                    ItemPrice = priceWithDiscount
-                };
-                ShoppingCart[itemName].Add(currentItemBeingScanned);
+                AddScannedEachesItemWithQuantityDiscount(itemToScan, itemName);
             }
             else if (itemToScan.Markdown > 0)
             {
-                double priceWithMarkdown = itemToScan.UnitPrice - itemToScan.Markdown;
-                ShoppingCartItem currentItemBeingScanned = new ShoppingCartItem()
-                {
-                    UnitPrice = priceWithMarkdown,
-                    ItemPrice = priceWithMarkdown
-                };
-                ShoppingCart[itemName].Add(currentItemBeingScanned);
+                AddScannedEachesItemWithMarkdown(itemToScan, itemName);
             }
             else
             {
-                ShoppingCartItem currentItemBeingScanned = new ShoppingCartItem()
-                {
-                    UnitPrice = itemToScan.UnitPrice,
-                    ItemPrice = itemToScan.UnitPrice
-                };
-                ShoppingCart[itemName].Add(currentItemBeingScanned);
+                AddScannedEachesItem(itemToScan, itemName);
             }
             itemToScan.NumberOfThisItemInCart++;
             if (GroupingDiscountValid(itemToScan))
@@ -77,6 +58,39 @@ namespace CheckoutOrder
                 ApplyGroupingDiscountForEachesItemAtSale(itemName);
             }
             ComputeTotalBill();
+        }
+
+        private void AddScannedEachesItem(StockItem itemToAdd, string itemName)
+        {
+            ShoppingCartItem currentItemBeingScanned = new ShoppingCartItem()
+            {
+                UnitPrice = itemToAdd.UnitPrice,
+                ItemPrice = itemToAdd.UnitPrice,
+            };
+            ShoppingCart[itemName].Add(currentItemBeingScanned);
+        }
+
+        private void AddScannedEachesItemWithQuantityDiscount(StockItem itemToAdd, string itemName)
+        {
+            QuantityDiscount qtyDiscount = itemToAdd.QtyDiscount;
+            double priceWithDiscount = itemToAdd.UnitPrice - (itemToAdd.UnitPrice * qtyDiscount.Discount);
+            ShoppingCartItem currentItemBeingScanned = new ShoppingCartItem()
+            {
+                UnitPrice = priceWithDiscount,
+                ItemPrice = priceWithDiscount
+            };
+            ShoppingCart[itemName].Add(currentItemBeingScanned);
+        }
+
+        private void AddScannedEachesItemWithMarkdown(StockItem itemToAdd, string itemName)
+        {
+            double priceWithMarkdown = itemToAdd.UnitPrice - itemToAdd.Markdown;
+            ShoppingCartItem currentItemBeingScanned = new ShoppingCartItem()
+            {
+                UnitPrice = priceWithMarkdown,
+                ItemPrice = priceWithMarkdown
+            };
+            ShoppingCart[itemName].Add(currentItemBeingScanned);
         }
 
         public void ScanItem(string itemName, double itemWeight)
