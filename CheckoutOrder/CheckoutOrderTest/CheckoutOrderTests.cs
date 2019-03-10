@@ -246,5 +246,37 @@ namespace CheckoutOrderTest
             Assert.Equal(5.00, _checkoutOrderUnderTest.ComputeTotalBill());
         }
 
+        [Fact]
+        public void BuyItemsThatGetAGroupDiscount()
+        {
+            _checkoutOrderUnderTest.ApplyGroupingDiscountToItemForSale("Wheaties", 3, 7.00);
+            _checkoutOrderUnderTest.ScanItem("Wheaties");
+            _checkoutOrderUnderTest.ScanItem("Wheaties");
+            _checkoutOrderUnderTest.ScanItem("Wheaties");
+
+            Assert.Equal(7.00, _checkoutOrderUnderTest.TotalGroceryBill);
+        }
+
+        [Fact]
+        public void BuyItemsThatGetAGroupDiscountAndExtras()
+        {
+            _checkoutOrderUnderTest.ApplyGroupingDiscountToItemForSale("Wheaties", 3, 7.00);
+            _checkoutOrderUnderTest.ScanItem("Wheaties");
+            _checkoutOrderUnderTest.ScanItem("Wheaties");
+            _checkoutOrderUnderTest.ScanItem("Wheaties");
+            _checkoutOrderUnderTest.ScanItem("Wheaties");
+
+            Assert.Equal(10.25, _checkoutOrderUnderTest.TotalGroceryBill);
+        }
+
+        [Fact]
+        public void BuyItemsThatDidntQuiteGetAGroupDiscount()
+        {
+            _checkoutOrderUnderTest.ApplyGroupingDiscountToItemForSale("Wheaties", 3, 7.00);
+            _checkoutOrderUnderTest.ScanItem("Wheaties");
+            _checkoutOrderUnderTest.ScanItem("Wheaties");
+
+            Assert.Equal(6.50, _checkoutOrderUnderTest.TotalGroceryBill);
+        }
     }
 }
