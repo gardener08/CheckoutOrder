@@ -104,30 +104,40 @@ namespace CheckoutOrder
             {
                 if (QuantityDiscountValid(itemToScan))
                 {
-                    ShoppingCartItem currentItemBeingScanned = new ShoppingCartItem()
-                    {
-                        UnitPrice = itemToScan.UnitPrice,
-                        ItemPrice = itemToScan.UnitPrice * itemWeight,
-                        ItemWeight = itemWeight
-                    };
-                    ShoppingCart[itemName].Add(currentItemBeingScanned);
-                    ApplyQuantityDiscountForWeighedItemAtSale(itemName);
+                    AddScannedWeighedItemWithQuantityDiscount(itemToScan, itemName, itemWeight);
                 }
                 else
                 {
-                    double unitPrice = itemToScan.UnitPrice - itemToScan.Markdown;
-                    double itemPrice = unitPrice * itemWeight;
-                    ShoppingCartItem currentItemBeingScanned = new ShoppingCartItem()
-                    {
-                        UnitPrice = unitPrice,
-                        ItemPrice = itemPrice,
-                        ItemWeight = itemWeight
-                    };
-                    ShoppingCart[itemName].Add(currentItemBeingScanned);
+                    AddScannedWeighedItem(itemToScan, itemName, itemWeight);
                 }
                 itemToScan.NumberOfThisItemInCart++;
             }
             ComputeTotalBill();
+        }
+
+        private void AddScannedWeighedItemWithQuantityDiscount(StockItem itemToAdd, string itemName, double itemWeight)
+        {
+            ShoppingCartItem currentItemBeingScanned = new ShoppingCartItem()
+            {
+                UnitPrice = itemToAdd.UnitPrice,
+                ItemPrice = itemToAdd.UnitPrice * itemWeight,
+                ItemWeight = itemWeight
+            };
+            ShoppingCart[itemName].Add(currentItemBeingScanned);
+            ApplyQuantityDiscountForWeighedItemAtSale(itemName);
+        }
+
+        private void AddScannedWeighedItem(StockItem itemToAdd, string itemName, double itemWeight)
+        {
+            double unitPrice = itemToAdd.UnitPrice - itemToAdd.Markdown;
+            double itemPrice = unitPrice * itemWeight;
+            ShoppingCartItem currentItemBeingScanned = new ShoppingCartItem()
+            {
+                UnitPrice = unitPrice,
+                ItemPrice = itemPrice,
+                ItemWeight = itemWeight
+            };
+            ShoppingCart[itemName].Add(currentItemBeingScanned);
         }
 
         public void MarkDownItem(string itemName, double markdown)
