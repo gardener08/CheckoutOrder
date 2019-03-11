@@ -191,7 +191,7 @@ namespace CheckoutOrder
 
         }
 
-        public void ApplyGroupingDiscountToItemForSale(string itemName, int quantityToGetDiscount, double priceForGroup)
+        public void ApplyGroupingDiscountSpecial(string itemName, int quantityToGetDiscount, double priceForGroup)
         {
             StockItem itemToScan = ItemsAvailableForSale[itemName];
             GroupDiscount grpDiscount = new GroupDiscount()
@@ -202,7 +202,7 @@ namespace CheckoutOrder
             itemToScan.GrpDiscount = grpDiscount;
         }
 
-        public void ApplyQuantityDiscount(string itemName, int quantityToGetDiscount, int quantityUnderDiscount, double discount)
+        public void ApplyQuantityDiscountSpecial(string itemName, int quantityToGetDiscount, int quantityUnderDiscount, double discount)
         {
             StockItem itemToScan = ItemsAvailableForSale[itemName];
             itemToScan.QtyDiscount = new QuantityDiscount()

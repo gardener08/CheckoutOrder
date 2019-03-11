@@ -74,7 +74,7 @@ namespace CheckoutOrderTest
         [Fact]
         public void BuySomeGetSomeMoreAtADiscountEaches()
         {
-            _checkoutOrderUnderTest.ApplyQuantityDiscount("Tomato Soup", 1, 1, 0.5);
+            _checkoutOrderUnderTest.ApplyQuantityDiscountSpecial("Tomato Soup", 1, 1, 0.5);
             _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
             _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
             Assert.Equal(.63, _checkoutOrderUnderTest.TotalGroceryBill);
@@ -83,7 +83,7 @@ namespace CheckoutOrderTest
         [Fact]
         public void BuySomeGetSomeMoreAtADiscountAndThenLoseTheDiscountEaches()
         {
-            _checkoutOrderUnderTest.ApplyQuantityDiscount("Tomato Soup", 1, 1, 0.5);
+            _checkoutOrderUnderTest.ApplyQuantityDiscountSpecial("Tomato Soup", 1, 1, 0.5);
             _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
             _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
             _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
@@ -154,7 +154,7 @@ namespace CheckoutOrderTest
         [Fact]
         public void BuySomeGetSomeMoreAtADiscountByWeight()
         {
-            _checkoutOrderUnderTest.ApplyQuantityDiscount("Oranges", 2, 1, 0.5);
+            _checkoutOrderUnderTest.ApplyQuantityDiscountSpecial("Oranges", 2, 1, 0.5);
             _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
             _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
             _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
@@ -165,7 +165,7 @@ namespace CheckoutOrderTest
         [Fact]
         public void BuySomeGetSomeMoreOfEqualOrLesserValueAtADiscountByWeight()
         {
-            _checkoutOrderUnderTest.ApplyQuantityDiscount("Oranges", 2, 1, 0.5);
+            _checkoutOrderUnderTest.ApplyQuantityDiscountSpecial("Oranges", 2, 1, 0.5);
             _checkoutOrderUnderTest.ScanItem("Oranges", 4.0);
             _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
             _checkoutOrderUnderTest.ScanItem("Oranges", 3.0);
@@ -200,7 +200,7 @@ namespace CheckoutOrderTest
                 QuantityToGetDiscount = 3,
                 PriceForGroup = 5
             };
-            _checkoutOrderUnderTest.ApplyGroupingDiscountToItemForSale("Tomato Soup", 3, 5.00);
+            _checkoutOrderUnderTest.ApplyGroupingDiscountSpecial("Tomato Soup", 3, 5.00);
             StockItem tomatoSoupItem = _checkoutOrderUnderTest.ItemsAvailableForSale["Tomato Soup"];
             AssertThatGroupingDiscountObjectsAreEqual(grpDiscount, tomatoSoupItem.GrpDiscount);
         }
@@ -214,7 +214,7 @@ namespace CheckoutOrderTest
         [Fact]
         public void BuySomeGetSomeMoreAtADiscountEachesComputeTotalBill()
         {
-            _checkoutOrderUnderTest.ApplyQuantityDiscount("Tomato Soup", 1, 1, 0.5);
+            _checkoutOrderUnderTest.ApplyQuantityDiscountSpecial("Tomato Soup", 1, 1, 0.5);
             _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
             _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
             Assert.Equal(.63, _checkoutOrderUnderTest.ComputeTotalBill());
@@ -238,7 +238,7 @@ namespace CheckoutOrderTest
         [Fact]
         public void BuySomeGetSomeMoreAtADiscountByWeightComputeTotalBill()
         {
-            _checkoutOrderUnderTest.ApplyQuantityDiscount("Oranges", 2, 1, 0.5);
+            _checkoutOrderUnderTest.ApplyQuantityDiscountSpecial("Oranges", 2, 1, 0.5);
             _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
             _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
             _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
@@ -249,7 +249,7 @@ namespace CheckoutOrderTest
         [Fact]
         public void BuyItemsThatGetAGroupDiscount()
         {
-            _checkoutOrderUnderTest.ApplyGroupingDiscountToItemForSale("Wheaties", 3, 7.00);
+            _checkoutOrderUnderTest.ApplyGroupingDiscountSpecial("Wheaties", 3, 7.00);
             _checkoutOrderUnderTest.ScanItem("Wheaties");
             _checkoutOrderUnderTest.ScanItem("Wheaties");
             _checkoutOrderUnderTest.ScanItem("Wheaties");
@@ -260,7 +260,7 @@ namespace CheckoutOrderTest
         [Fact]
         public void BuyItemsThatGetAGroupDiscountAndExtras()
         {
-            _checkoutOrderUnderTest.ApplyGroupingDiscountToItemForSale("Wheaties", 3, 7.00);
+            _checkoutOrderUnderTest.ApplyGroupingDiscountSpecial("Wheaties", 3, 7.00);
             _checkoutOrderUnderTest.ScanItem("Wheaties");
             _checkoutOrderUnderTest.ScanItem("Wheaties");
             _checkoutOrderUnderTest.ScanItem("Wheaties");
@@ -272,7 +272,7 @@ namespace CheckoutOrderTest
         [Fact]
         public void BuyItemsThatDidntQuiteGetAGroupDiscount()
         {
-            _checkoutOrderUnderTest.ApplyGroupingDiscountToItemForSale("Wheaties", 3, 7.00);
+            _checkoutOrderUnderTest.ApplyGroupingDiscountSpecial("Wheaties", 3, 7.00);
             _checkoutOrderUnderTest.ScanItem("Wheaties");
             _checkoutOrderUnderTest.ScanItem("Wheaties");
 
