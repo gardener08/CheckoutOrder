@@ -23,11 +23,18 @@ namespace CheckoutOrderTest
             Assert.Equal(.42, _checkoutOrderUnderTest.TotalGroceryBill);
         }
 
+        private void ScanMultipleEachesItems(Program itemUnderTest, string itemName, int numberOfItemsToScan)
+        {
+            for (int i = 0; i < numberOfItemsToScan; i++)
+            {
+                itemUnderTest.ScanItem(itemName);
+            }
+        }
+
         [Fact]
         public void ScanItemTwiceAndReturnTotal()
         {
-            _checkoutOrderUnderTest.ScanItem("Tomato Soup");
-            _checkoutOrderUnderTest.ScanItem("Tomato Soup");
+            ScanMultipleEachesItems(_checkoutOrderUnderTest, "Tomato Soup", 2);
             Assert.Equal(.84, _checkoutOrderUnderTest.TotalGroceryBill);
         }
 
@@ -75,8 +82,7 @@ namespace CheckoutOrderTest
         public void BuySomeGetSomeMoreAtADiscountEaches()
         {
             _checkoutOrderUnderTest.ApplyQuantityDiscountSpecial("Tomato Soup", 1, 1, 0.5);
-            _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
-            _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
+            ScanMultipleEachesItems(_checkoutOrderUnderTest, "Tomato Soup", 2);
             Assert.Equal(.63, _checkoutOrderUnderTest.TotalGroceryBill);
         }
 
@@ -84,10 +90,7 @@ namespace CheckoutOrderTest
         public void BuySomeGetSomeMoreAtADiscountMultipleTimesEaches()
         {
             _checkoutOrderUnderTest.ApplyQuantityDiscountSpecial("Tomato Soup", 1, 1, 0.5);
-            _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
-            _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
-            _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
-            _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
+            ScanMultipleEachesItems(_checkoutOrderUnderTest, "Tomato Soup", 4);
             Assert.Equal(1.26, _checkoutOrderUnderTest.TotalGroceryBill);
         }
 
@@ -95,9 +98,7 @@ namespace CheckoutOrderTest
         public void BuySomeGetSomeMoreAtADiscountAndThenLoseTheDiscountEaches()
         {
             _checkoutOrderUnderTest.ApplyQuantityDiscountSpecial("Tomato Soup", 1, 1, 0.5);
-            _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
-            _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
-            _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
+            ScanMultipleEachesItems(_checkoutOrderUnderTest, "Tomato Soup", 3);
             Assert.Equal(1.05, _checkoutOrderUnderTest.TotalGroceryBill);
         }
 
@@ -240,8 +241,7 @@ namespace CheckoutOrderTest
         public void BuySomeGetSomeMoreAtADiscountEachesComputeTotalBill()
         {
             _checkoutOrderUnderTest.ApplyQuantityDiscountSpecial("Tomato Soup", 1, 1, 0.5);
-            _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
-            _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
+            ScanMultipleEachesItems(_checkoutOrderUnderTest, "Tomato Soup", 2);
             Assert.Equal(.63, _checkoutOrderUnderTest.ComputeTotalBill());
         }
 
@@ -275,9 +275,7 @@ namespace CheckoutOrderTest
         public void BuyItemsThatGetAGroupDiscount()
         {
             _checkoutOrderUnderTest.ApplyGroupingDiscountSpecial("Wheaties", 3, 7.00);
-            _checkoutOrderUnderTest.ScanItem("Wheaties");
-            _checkoutOrderUnderTest.ScanItem("Wheaties");
-            _checkoutOrderUnderTest.ScanItem("Wheaties");
+            ScanMultipleEachesItems(_checkoutOrderUnderTest, "Wheaties", 3);
 
             Assert.Equal(7.00, _checkoutOrderUnderTest.TotalGroceryBill);
         }
@@ -286,10 +284,7 @@ namespace CheckoutOrderTest
         public void BuyItemsThatGetAGroupDiscountAndExtras()
         {
             _checkoutOrderUnderTest.ApplyGroupingDiscountSpecial("Wheaties", 3, 7.00);
-            _checkoutOrderUnderTest.ScanItem("Wheaties");
-            _checkoutOrderUnderTest.ScanItem("Wheaties");
-            _checkoutOrderUnderTest.ScanItem("Wheaties");
-            _checkoutOrderUnderTest.ScanItem("Wheaties");
+            ScanMultipleEachesItems(_checkoutOrderUnderTest, "Wheaties", 4);
 
             Assert.Equal(10.25, _checkoutOrderUnderTest.TotalGroceryBill);
         }
@@ -298,12 +293,7 @@ namespace CheckoutOrderTest
         public void BuyItemsThatGetTwoGroupDiscounts()
         {
             _checkoutOrderUnderTest.ApplyGroupingDiscountSpecial("Wheaties", 3, 7.00);
-            _checkoutOrderUnderTest.ScanItem("Wheaties");
-            _checkoutOrderUnderTest.ScanItem("Wheaties");
-            _checkoutOrderUnderTest.ScanItem("Wheaties");
-            _checkoutOrderUnderTest.ScanItem("Wheaties");
-            _checkoutOrderUnderTest.ScanItem("Wheaties");
-            _checkoutOrderUnderTest.ScanItem("Wheaties");
+            ScanMultipleEachesItems(_checkoutOrderUnderTest, "Wheaties", 6);
 
             Assert.Equal(14, _checkoutOrderUnderTest.TotalGroceryBill, 2);
         }
@@ -312,13 +302,7 @@ namespace CheckoutOrderTest
         public void BuyItemsThatGetTwoGroupDiscountsWithAnExtraItem()
         {
             _checkoutOrderUnderTest.ApplyGroupingDiscountSpecial("Wheaties", 3, 7.00);
-            _checkoutOrderUnderTest.ScanItem("Wheaties");
-            _checkoutOrderUnderTest.ScanItem("Wheaties");
-            _checkoutOrderUnderTest.ScanItem("Wheaties");
-            _checkoutOrderUnderTest.ScanItem("Wheaties");
-            _checkoutOrderUnderTest.ScanItem("Wheaties");
-            _checkoutOrderUnderTest.ScanItem("Wheaties");
-            _checkoutOrderUnderTest.ScanItem("Wheaties");
+            ScanMultipleEachesItems(_checkoutOrderUnderTest, "Wheaties", 7);
 
             Assert.Equal(17.25, _checkoutOrderUnderTest.TotalGroceryBill, 2);
         }
@@ -327,8 +311,7 @@ namespace CheckoutOrderTest
         public void BuyItemsThatDidntQuiteGetAGroupDiscount()
         {
             _checkoutOrderUnderTest.ApplyGroupingDiscountSpecial("Wheaties", 3, 7.00);
-            _checkoutOrderUnderTest.ScanItem("Wheaties");
-            _checkoutOrderUnderTest.ScanItem("Wheaties");
+            ScanMultipleEachesItems(_checkoutOrderUnderTest, "Wheaties", 2);
 
             Assert.Equal(6.50, _checkoutOrderUnderTest.TotalGroceryBill);
         }
