@@ -81,6 +81,17 @@ namespace CheckoutOrderTest
         }
 
         [Fact]
+        public void BuySomeGetSomeMoreAtADiscountMultipleTimesEaches()
+        {
+            _checkoutOrderUnderTest.ApplyQuantityDiscountSpecial("Tomato Soup", 1, 1, 0.5);
+            _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
+            _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
+            _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
+            _checkoutOrderUnderTest.ScanItem(("Tomato Soup"));
+            Assert.Equal(1.26, _checkoutOrderUnderTest.TotalGroceryBill);
+        }
+
+        [Fact]
         public void BuySomeGetSomeMoreAtADiscountAndThenLoseTheDiscountEaches()
         {
             _checkoutOrderUnderTest.ApplyQuantityDiscountSpecial("Tomato Soup", 1, 1, 0.5);
@@ -95,7 +106,7 @@ namespace CheckoutOrderTest
         {
             QuantityDiscount qtyDiscount = new QuantityDiscount()
             { 
-                Discount = 1.0, QuantityToGetDiscount = 1, QuantityUnderDiscount = 1
+                Discount = 1.0, FullPriceItems = 1, QuantityUnderDiscount = 1
             };
             StockItem itemToScan = new StockItem()
             {
@@ -105,7 +116,7 @@ namespace CheckoutOrderTest
                 QtyDiscount = qtyDiscount,
                 NumberOfThisItemInCart = 1
             };
-            bool quantityDiscountValid = _checkoutOrderUnderTest.QuantityDiscountValid(itemToScan);
+            bool quantityDiscountValid = _checkoutOrderUnderTest.QuantityDiscountValid(itemToScan, 1, 0);
             Assert.True(quantityDiscountValid);
         }
 
@@ -115,7 +126,7 @@ namespace CheckoutOrderTest
             QuantityDiscount qtyDiscount = new QuantityDiscount()
             {
                 Discount = 1.0,
-                QuantityToGetDiscount = 1,
+                FullPriceItems = 1,
                 QuantityUnderDiscount = 1
             };
             StockItem itemToScan = new StockItem()
@@ -126,7 +137,7 @@ namespace CheckoutOrderTest
                 QtyDiscount = qtyDiscount,
                 NumberOfThisItemInCart = 2
             };
-            bool quantityDiscountValid = _checkoutOrderUnderTest.QuantityDiscountValid(itemToScan);
+            bool quantityDiscountValid = _checkoutOrderUnderTest.QuantityDiscountValid(itemToScan, 2, 0);
             Assert.False(quantityDiscountValid);
         }
 
@@ -136,7 +147,7 @@ namespace CheckoutOrderTest
             QuantityDiscount qtyDiscount = new QuantityDiscount()
             {
                 Discount = 1.0,
-                QuantityToGetDiscount = 1,
+                FullPriceItems = 1,
                 QuantityUnderDiscount = 1
             };
             StockItem itemToScan = new StockItem()
@@ -147,7 +158,7 @@ namespace CheckoutOrderTest
                 QtyDiscount = qtyDiscount,
                 NumberOfThisItemInCart = 0
             };
-            bool quantityDiscountValid = _checkoutOrderUnderTest.QuantityDiscountValid(itemToScan);
+            bool quantityDiscountValid = _checkoutOrderUnderTest.QuantityDiscountValid(itemToScan, 0, 0);
             Assert.False(quantityDiscountValid);
         }
 
@@ -158,8 +169,18 @@ namespace CheckoutOrderTest
             _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
             _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
             _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
-
             Assert.Equal(5.00, _checkoutOrderUnderTest.TotalGroceryBill);
+        }
+
+        [Fact]
+        public void BuySomeGetSomeMoreAtADiscountMultipleTimesByWeight()
+        {
+            _checkoutOrderUnderTest.ApplyQuantityDiscountSpecial("Oranges", 2, 1, 0.5);
+            _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
+            _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
+            _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
+            _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
+            Assert.Equal(7.00, _checkoutOrderUnderTest.TotalGroceryBill);
         }
 
         [Fact]
