@@ -42,7 +42,9 @@ namespace CheckoutOrder
             StockItem itemToScan = ItemsAvailableForSale[itemName];
             ShoppingCartItemHolder shoppingCartHolderOfThisItemType = ShoppingCart[itemToScan.ItemName];
             int quantityDiscountsGiven = shoppingCartHolderOfThisItemType.QuantityDiscountsGiven;
+            int groupDiscountsGiven = shoppingCartHolderOfThisItemType.GroupDiscountsGiven;
             int cartItemsCount = shoppingCartHolderOfThisItemType.CartItems.Count;
+
             if (QuantityDiscountValid(itemToScan, cartItemsCount, quantityDiscountsGiven))
             {
                 ScanEachesItemWithQuantityDiscount(itemToScan, itemName);
@@ -55,8 +57,9 @@ namespace CheckoutOrder
             {
                 AddScannedEachesItem(itemToScan, itemName);
             }
-            itemToScan.NumberOfThisItemInCart++;
-            if (GroupingDiscountValid(itemToScan))
+
+            int cartItemsCountAfterScan = shoppingCartHolderOfThisItemType.CartItems.Count;
+            if (GroupingDiscountValid(itemToScan, cartItemsCountAfterScan, groupDiscountsGiven))
             {
                 ApplyGroupingDiscountForEachesItemAtSale(itemName);
             }
@@ -125,7 +128,6 @@ namespace CheckoutOrder
             else if (itemToScan.PriceCategory == "byWeight")
             {
                 AddScannedWeighedItem(itemToScan, itemName, itemWeight);              
-                itemToScan.NumberOfThisItemInCart++;
                 if (itemToScan.QtyDiscount != null)
                 {
                     ApplyQuantityDiscountForWeighedItemAtSale(itemName);
@@ -179,12 +181,12 @@ namespace CheckoutOrder
             }
         }
 
-        public bool GroupingDiscountValid(StockItem item)
+        public bool GroupingDiscountValid(StockItem item, int currentItemPositionOneBased, int groupDiscountsGiven)
         {
             GroupDiscount grpDiscount = item.GrpDiscount;
             if (grpDiscount != null)
             {
-                bool discountEligible = (item.NumberOfThisItemInCart == grpDiscount.QuantityToGetDiscount);
+                bool discountEligible = (currentItemPositionOneBased == ((groupDiscountsGiven + 1) * grpDiscount.QuantityToGetDiscount));
                 if (discountEligible)
                 {
                     return true;
@@ -225,23 +227,25 @@ namespace CheckoutOrder
 
         private void ApplyGroupingDiscountForEachesItemAtSale(string itemName)
         {
-            List<ShoppingCartItem> shoppingCartItemsOfThisType = (List<ShoppingCartItem>)(ShoppingCart[itemName].CartItems);
+            ShoppingCartItemHolder shoppingCartHolderOfThisItemType = ShoppingCart[itemName];
+            List<ShoppingCartItem> shoppingCartItemsOfThisType = (List<ShoppingCartItem>)(shoppingCartHolderOfThisItemType.CartItems);
             StockItem inventoryItemOfThisType = ItemsAvailableForSale[itemName];
             GroupDiscount discountForThisItemType = inventoryItemOfThisType.GrpDiscount;
+            double pricePerItem = discountForThisItemType.PriceForGroup /
+                                  discountForThisItemType.QuantityToGetDiscount;
 
-            if (shoppingCartItemsOfThisType.Count >= discountForThisItemType.QuantityToGetDiscount)
+            int numberOfItemsToGetDiscount = inventoryItemOfThisType.GrpDiscount.QuantityToGetDiscount;
+            int totalShoppingCartItemsOfThisType = shoppingCartHolderOfThisItemType.CartItems.Count;
+            int firstItemIndexToGetDiscount = totalShoppingCartItemsOfThisType - numberOfItemsToGetDiscount;
+
+            for (int i = firstItemIndexToGetDiscount; i < totalShoppingCartItemsOfThisType; i++)
             {
-                double pricePerItem = discountForThisItemType.PriceForGroup /
-                                      discountForThisItemType.QuantityToGetDiscount;
-
-                int numberOfItemsToGetDiscount = inventoryItemOfThisType.GrpDiscount.QuantityToGetDiscount;
-                for (int i = 0; i < numberOfItemsToGetDiscount; i++)
-                {
-                    ShoppingCartItem itemToApplyDiscountTo = shoppingCartItemsOfThisType.ElementAt(i);
-                    itemToApplyDiscountTo.UnitPrice = pricePerItem;
-                    itemToApplyDiscountTo.ItemPrice = pricePerItem;
-                }
+                ShoppingCartItem itemToApplyDiscountTo = shoppingCartItemsOfThisType.ElementAt(i);
+                itemToApplyDiscountTo.UnitPrice = pricePerItem;
+                itemToApplyDiscountTo.ItemPrice = pricePerItem;
             }
+            shoppingCartHolderOfThisItemType.GroupDiscountsGiven++;
+
         }
 
         private void ApplyQuantityDiscountForWeighedItemAtSale(string itemName)
@@ -295,7 +299,6 @@ namespace CheckoutOrder
         public string PriceCategory { get; set; }
         public QuantityDiscount QtyDiscount { get; set; }
         public GroupDiscount GrpDiscount { get; set; }
-        public int NumberOfThisItemInCart { get; set; }
     }
 
     public class QuantityDiscount
@@ -315,6 +318,7 @@ namespace CheckoutOrder
     {
         public IList<ShoppingCartItem> CartItems { get; }
         public int QuantityDiscountsGiven { get; set; }
+        public int GroupDiscountsGiven { get; set; }
 
         public ShoppingCartItemHolder()
         {

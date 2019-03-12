@@ -108,15 +108,16 @@ namespace CheckoutOrderTest
             { 
                 Discount = 1.0, FullPriceItems = 1, QuantityUnderDiscount = 1
             };
+            int numberOfItemsInThisCart = 1;
+            int quantityDiscountsGiven = 0;
             StockItem itemToScan = new StockItem()
             {
                 ItemName = "TestItem",
                 PriceCategory = "eaches",
                 UnitPrice = 2.0,
-                QtyDiscount = qtyDiscount,
-                NumberOfThisItemInCart = 1
+                QtyDiscount = qtyDiscount
             };
-            bool quantityDiscountValid = _checkoutOrderUnderTest.QuantityDiscountValid(itemToScan, 1, 0);
+            bool quantityDiscountValid = _checkoutOrderUnderTest.QuantityDiscountValid(itemToScan, numberOfItemsInThisCart, quantityDiscountsGiven);
             Assert.True(quantityDiscountValid);
         }
 
@@ -129,15 +130,16 @@ namespace CheckoutOrderTest
                 FullPriceItems = 1,
                 QuantityUnderDiscount = 1
             };
+            int numberOfItemsInThisCart = 2;
+            int quantityDiscountsGiven = 0;
             StockItem itemToScan = new StockItem()
             {
                 ItemName = "TestItem",
                 PriceCategory = "eaches",
                 UnitPrice = 2.0,
-                QtyDiscount = qtyDiscount,
-                NumberOfThisItemInCart = 2
+                QtyDiscount = qtyDiscount
             };
-            bool quantityDiscountValid = _checkoutOrderUnderTest.QuantityDiscountValid(itemToScan, 2, 0);
+            bool quantityDiscountValid = _checkoutOrderUnderTest.QuantityDiscountValid(itemToScan, numberOfItemsInThisCart, quantityDiscountsGiven);
             Assert.False(quantityDiscountValid);
         }
 
@@ -150,15 +152,16 @@ namespace CheckoutOrderTest
                 FullPriceItems = 1,
                 QuantityUnderDiscount = 1
             };
+            int numberOfItemsInThisCart = 0;
+            int quantityDiscountsGiven = 0;
             StockItem itemToScan = new StockItem()
             {
                 ItemName = "TestItem",
                 PriceCategory = "eaches",
                 UnitPrice = 2.0,
-                QtyDiscount = qtyDiscount,
-                NumberOfThisItemInCart = 0
+                QtyDiscount = qtyDiscount
             };
-            bool quantityDiscountValid = _checkoutOrderUnderTest.QuantityDiscountValid(itemToScan, 0, 0);
+            bool quantityDiscountValid = _checkoutOrderUnderTest.QuantityDiscountValid(itemToScan, numberOfItemsInThisCart, quantityDiscountsGiven);
             Assert.False(quantityDiscountValid);
         }
 
@@ -201,15 +204,16 @@ namespace CheckoutOrderTest
             {
                 QuantityToGetDiscount = 3
             };
+            int numberOfItemsInThisCart = 3;
+            int groupDiscountsGiven = 0;
             StockItem itemToScan = new StockItem()
             {
                 ItemName = "TestItem",
                 PriceCategory = "eaches",
                 UnitPrice = 2.0,
                 GrpDiscount = grpDiscount,
-                NumberOfThisItemInCart = 3
             };
-            bool quantityDiscountValid = _checkoutOrderUnderTest.GroupingDiscountValid(itemToScan);
+            bool quantityDiscountValid = _checkoutOrderUnderTest.GroupingDiscountValid(itemToScan, numberOfItemsInThisCart, groupDiscountsGiven);
             Assert.True(quantityDiscountValid);
         }
 
@@ -288,6 +292,35 @@ namespace CheckoutOrderTest
             _checkoutOrderUnderTest.ScanItem("Wheaties");
 
             Assert.Equal(10.25, _checkoutOrderUnderTest.TotalGroceryBill);
+        }
+
+        [Fact]
+        public void BuyItemsThatGetTwoGroupDiscounts()
+        {
+            _checkoutOrderUnderTest.ApplyGroupingDiscountSpecial("Wheaties", 3, 7.00);
+            _checkoutOrderUnderTest.ScanItem("Wheaties");
+            _checkoutOrderUnderTest.ScanItem("Wheaties");
+            _checkoutOrderUnderTest.ScanItem("Wheaties");
+            _checkoutOrderUnderTest.ScanItem("Wheaties");
+            _checkoutOrderUnderTest.ScanItem("Wheaties");
+            _checkoutOrderUnderTest.ScanItem("Wheaties");
+
+            Assert.Equal(14, _checkoutOrderUnderTest.TotalGroceryBill, 2);
+        }
+
+        [Fact]
+        public void BuyItemsThatGetTwoGroupDiscountsWithAnExtraItem()
+        {
+            _checkoutOrderUnderTest.ApplyGroupingDiscountSpecial("Wheaties", 3, 7.00);
+            _checkoutOrderUnderTest.ScanItem("Wheaties");
+            _checkoutOrderUnderTest.ScanItem("Wheaties");
+            _checkoutOrderUnderTest.ScanItem("Wheaties");
+            _checkoutOrderUnderTest.ScanItem("Wheaties");
+            _checkoutOrderUnderTest.ScanItem("Wheaties");
+            _checkoutOrderUnderTest.ScanItem("Wheaties");
+            _checkoutOrderUnderTest.ScanItem("Wheaties");
+
+            Assert.Equal(17.25, _checkoutOrderUnderTest.TotalGroceryBill, 2);
         }
 
         [Fact]
