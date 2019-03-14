@@ -31,6 +31,14 @@ namespace CheckoutOrderTest
             }
         }
 
+        private void ScanMultipleWeighedItemsWithTheSameWeight(Program itemUnderTest, string itemName, double itemWeight, int numberOfItemsToScan)
+        {
+            for (int i = 0; i < numberOfItemsToScan; i++)
+            {
+                itemUnderTest.ScanItem(itemName, itemWeight);
+            }
+        }
+
         [Fact]
         public void ScanItemTwiceAndReturnTotal()
         {
@@ -367,6 +375,43 @@ namespace CheckoutOrderTest
             _checkoutOrderUnderTest.ApplyQuantityDiscountSpecial("Tomato Soup", 2, 1, .5, 4);
             ScanMultipleEachesItems(_checkoutOrderUnderTest, "Tomato Soup", 13);
             Assert.Equal(4.62, _checkoutOrderUnderTest.TotalGroceryBill);
+        }
+
+        [Fact]
+        public void ScanMultipleWeighedItemsWithQuantityDiscountLimitAndAnExtraItemSameWeight()
+        {
+            _checkoutOrderUnderTest.ApplyQuantityDiscountSpecial("Oranges", 2, 1, .5, 4);
+            ScanMultipleWeighedItemsWithTheSameWeight(_checkoutOrderUnderTest, "Oranges", 2, 13);
+            Assert.Equal(22, _checkoutOrderUnderTest.TotalGroceryBill);
+        }
+
+        [Fact]
+        public void ScanMultipleWeighedItemsWithQuantityDiscountLimitAndAnExtraItem()
+        {
+            _checkoutOrderUnderTest.ApplyQuantityDiscountSpecial("Oranges", 2, 1, .5, 4);
+            // Total for this group should be 8.0
+            _checkoutOrderUnderTest.ScanItem("Oranges", 4.0);
+            _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
+            _checkoutOrderUnderTest.ScanItem("Oranges", 3.0);
+
+            // Total for this group should be 16
+            _checkoutOrderUnderTest.ScanItem("Oranges", 8.0);
+            _checkoutOrderUnderTest.ScanItem("Oranges", 4.0);
+            _checkoutOrderUnderTest.ScanItem("Oranges", 6.0);
+
+            // Total for this group should be 5.5
+            _checkoutOrderUnderTest.ScanItem("Oranges", 1.0);
+            _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
+            _checkoutOrderUnderTest.ScanItem("Oranges", 3.0);
+
+            // Total for this group should be 2.5
+            _checkoutOrderUnderTest.ScanItem("Oranges", 1);
+            _checkoutOrderUnderTest.ScanItem("Oranges", 1);
+            _checkoutOrderUnderTest.ScanItem("Oranges", 1);
+
+            _checkoutOrderUnderTest.ScanItem("Oranges", 10);
+
+            Assert.Equal(42, _checkoutOrderUnderTest.TotalGroceryBill);
         }
     }
 }
