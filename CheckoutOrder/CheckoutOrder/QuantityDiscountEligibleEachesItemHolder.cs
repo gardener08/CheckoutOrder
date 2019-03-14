@@ -44,6 +44,10 @@ namespace CheckoutOrder
             QuantityDiscount qtyDiscount = item.QtyDiscount;
             if (qtyDiscount != null)
             {
+                if ((qtyDiscount.MaximumNumberOfDiscounts > 0) && (quantityDiscountsGiven > qtyDiscount.MaximumNumberOfDiscounts))
+                {
+                    return false;
+                }
                 int itemsToGetAFullDiscount = (quantityDiscountsGiven + 1) *
                                        (qtyDiscount.QuantityUnderDiscount + qtyDiscount.FullPriceItems);
                 int startDiscountAt = (itemsToGetAFullDiscount - qtyDiscount.QuantityUnderDiscount);
@@ -67,8 +71,14 @@ namespace CheckoutOrder
         {
             int quantityDiscountsGiven = this.QuantityDiscountsGiven;
             int updatedCartItemsCount = this.CartItems.Count;
+            QuantityDiscount qtyDiscount = inventoryItem.QtyDiscount;
+
+            if ((qtyDiscount.MaximumNumberOfDiscounts > 0) && (quantityDiscountsGiven > qtyDiscount.MaximumNumberOfDiscounts))
+            {
+                return;
+            }
             int itemsToGetAFullDiscount = (quantityDiscountsGiven + 1) *
-                   (inventoryItem.QtyDiscount.QuantityUnderDiscount + inventoryItem.QtyDiscount.FullPriceItems);
+                (inventoryItem.QtyDiscount.QuantityUnderDiscount + inventoryItem.QtyDiscount.FullPriceItems);
 
             if ((updatedCartItemsCount % itemsToGetAFullDiscount) == 0)
             {

@@ -144,14 +144,15 @@ namespace CheckoutOrder
             itemToScan.GrpDiscount = grpDiscount;
         }
 
-        public void ApplyQuantityDiscountSpecial(string itemName, int quantityToGetDiscount, int quantityUnderDiscount, double discount)
+        public void ApplyQuantityDiscountSpecial(string itemName, int quantityToGetDiscount, int quantityUnderDiscount, double discount, int maxNumberOfDiscounts)
         {
             StockItem itemToScan = ItemsAvailableForSale[itemName];
             QuantityDiscount qtyDiscount = new QuantityDiscount()
             {
                 FullPriceItems = quantityToGetDiscount,
                 QuantityUnderDiscount = quantityUnderDiscount,
-                Discount = discount
+                Discount = discount,
+                MaximumNumberOfDiscounts = maxNumberOfDiscounts
             };
             itemToScan.QtyDiscount = qtyDiscount;
             if (itemToScan.PriceCategory == "byWeight")
@@ -221,6 +222,12 @@ namespace CheckoutOrder
         public int FullPriceItems { get; set; }
         public int QuantityUnderDiscount { get; set; }
         public double Discount { get; set; }
+        public int MaximumNumberOfDiscounts { get; set; }
+
+        public QuantityDiscount()
+        {
+            MaximumNumberOfDiscounts = -1;
+        }
     }
 
     public class GroupDiscount
