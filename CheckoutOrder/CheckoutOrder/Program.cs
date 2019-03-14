@@ -170,7 +170,7 @@ namespace CheckoutOrder
             itemToScan.QtyDiscount = qtyDiscount;
             if (itemToScan.PriceCategory == "byWeight")
             {
-                QuantityDiscountEligibleItemHolder shoppingCartHolderOfThisItemType = new QuantityDiscountEligibleItemHolder(itemToScan);
+                QuantityDiscountEligibleWeighedItemHolder shoppingCartHolderOfThisItemType = new QuantityDiscountEligibleWeighedItemHolder(itemToScan);
                 ShoppingCart[itemToScan.ItemName] = shoppingCartHolderOfThisItemType;
             }
             else if (itemToScan.PriceCategory == "eaches")

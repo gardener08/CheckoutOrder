@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace CheckoutOrder
 {
-    class QuantityDiscountEligibleItemHolder : ShoppingCartItemHolder
+    class QuantityDiscountEligibleWeighedItemHolder : ShoppingCartItemHolder
     {
-        public QuantityDiscountEligibleItemHolder(StockItem inventoryItem) : base(inventoryItem)
+        public QuantityDiscountEligibleWeighedItemHolder(StockItem inventoryItem) : base(inventoryItem)
         {
             _quantityDiscountEligibleGroups = new Stack<IList<ShoppingCartItem>>();
             if (inventoryItem.QtyDiscount != null)
