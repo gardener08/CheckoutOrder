@@ -39,12 +39,6 @@ namespace CheckoutOrder
         public void ScanItem(string itemName)
         {
             StockItem itemToScan = ItemsAvailableForSale[itemName];
-
-            if (itemToScan.Markdown > 0)
-            {
-                AddScannedEachesItemWithMarkdown(itemToScan, itemName);
-            }
-            else
             {
                 AddScannedEachesItem(itemToScan, itemName);
             }
@@ -63,17 +57,6 @@ namespace CheckoutOrder
         {
             ShoppingCartItemHolder itemHolder = ShoppingCart[itemToAdd.ItemName];
             itemHolder.ScanItem(itemName);
-        }
-
-        private void AddScannedEachesItemWithMarkdown(StockItem itemToAdd, string itemName)
-        {
-            double priceWithMarkdown = itemToAdd.UnitPrice - itemToAdd.Markdown;
-            ShoppingCartItem currentItemBeingScanned = new ShoppingCartItem()
-            {
-                UnitPrice = priceWithMarkdown,
-                ItemPrice = priceWithMarkdown
-            };
-            ShoppingCart[itemName].CartItems.Add(currentItemBeingScanned);
         }
 
         public void ScanItem(string itemName, double itemWeight)
@@ -98,7 +81,10 @@ namespace CheckoutOrder
 
         public void MarkDownItem(string itemName, double markdown)
         {
+            StockItem inventoryItem = ItemsAvailableForSale[itemName];
             ItemsAvailableForSale[itemName].Markdown = markdown;
+            MarkedDownEachesItemHolder shoppingCartHolderOfThisItemType = new MarkedDownEachesItemHolder(inventoryItem);
+            ShoppingCart[inventoryItem.ItemName] = shoppingCartHolderOfThisItemType;
         }
 
         public bool QuantityDiscountValid(StockItem item, int currentItemPosition, int quantityDiscountsGiven)
