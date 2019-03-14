@@ -279,7 +279,7 @@ namespace CheckoutOrderTest
                 QuantityToGetDiscount = 3,
                 PriceForGroup = 5
             };
-            _checkoutOrderUnderTest.ApplyGroupingDiscountSpecial("Tomato Soup", 3, 5.00);
+            _checkoutOrderUnderTest.ApplyGroupingDiscountSpecial("Tomato Soup", 3, 5.00, -1);
             StockItem tomatoSoupItem = _checkoutOrderUnderTest.ItemsAvailableForSale["Tomato Soup"];
             AssertThatGroupingDiscountObjectsAreEqual(grpDiscount, tomatoSoupItem.GrpDiscount);
         }
@@ -327,7 +327,7 @@ namespace CheckoutOrderTest
         [Fact]
         public void BuyItemsThatGetAGroupDiscount()
         {
-            _checkoutOrderUnderTest.ApplyGroupingDiscountSpecial("Wheaties", 3, 7.00);
+            _checkoutOrderUnderTest.ApplyGroupingDiscountSpecial("Wheaties", 3, 7.00, -1);
             ScanMultipleEachesItems(_checkoutOrderUnderTest, "Wheaties", 3);
 
             Assert.Equal(7.00, _checkoutOrderUnderTest.TotalGroceryBill);
@@ -336,7 +336,7 @@ namespace CheckoutOrderTest
         [Fact]
         public void BuyItemsThatGetAGroupDiscountAndExtras()
         {
-            _checkoutOrderUnderTest.ApplyGroupingDiscountSpecial("Wheaties", 3, 7.00);
+            _checkoutOrderUnderTest.ApplyGroupingDiscountSpecial("Wheaties", 3, 7.00, -1);
             ScanMultipleEachesItems(_checkoutOrderUnderTest, "Wheaties", 4);
 
             Assert.Equal(10.25, _checkoutOrderUnderTest.TotalGroceryBill);
@@ -345,7 +345,7 @@ namespace CheckoutOrderTest
         [Fact]
         public void BuyItemsThatGetTwoGroupDiscounts()
         {
-            _checkoutOrderUnderTest.ApplyGroupingDiscountSpecial("Wheaties", 3, 7.00);
+            _checkoutOrderUnderTest.ApplyGroupingDiscountSpecial("Wheaties", 3, 7.00, -1);
             ScanMultipleEachesItems(_checkoutOrderUnderTest, "Wheaties", 6);
 
             Assert.Equal(14, _checkoutOrderUnderTest.TotalGroceryBill, 2);
@@ -354,7 +354,7 @@ namespace CheckoutOrderTest
         [Fact]
         public void BuyItemsThatGetTwoGroupDiscountsWithAnExtraItem()
         {
-            _checkoutOrderUnderTest.ApplyGroupingDiscountSpecial("Wheaties", 3, 7.00);
+            _checkoutOrderUnderTest.ApplyGroupingDiscountSpecial("Wheaties", 3, 7.00, -1);
             ScanMultipleEachesItems(_checkoutOrderUnderTest, "Wheaties", 7);
 
             Assert.Equal(17.25, _checkoutOrderUnderTest.TotalGroceryBill, 2);
@@ -363,7 +363,7 @@ namespace CheckoutOrderTest
         [Fact]
         public void BuyItemsThatDidntQuiteGetAGroupDiscount()
         {
-            _checkoutOrderUnderTest.ApplyGroupingDiscountSpecial("Wheaties", 3, 7.00);
+            _checkoutOrderUnderTest.ApplyGroupingDiscountSpecial("Wheaties", 3, 7.00, -1);
             ScanMultipleEachesItems(_checkoutOrderUnderTest, "Wheaties", 2);
 
             Assert.Equal(6.50, _checkoutOrderUnderTest.TotalGroceryBill);
@@ -412,6 +412,15 @@ namespace CheckoutOrderTest
             _checkoutOrderUnderTest.ScanItem("Oranges", 10);
 
             Assert.Equal(42, _checkoutOrderUnderTest.TotalGroceryBill);
+        }
+
+        [Fact]
+        public void BuyItemsThatGetTheLimitOnGroupDiscountsAndExtras()
+        {
+            _checkoutOrderUnderTest.ApplyGroupingDiscountSpecial("Wheaties", 3, 7.00, 2);
+            ScanMultipleEachesItems(_checkoutOrderUnderTest, "Wheaties", 10);
+
+            Assert.Equal(27, _checkoutOrderUnderTest.TotalGroceryBill);
         }
     }
 }

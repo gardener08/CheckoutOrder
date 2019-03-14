@@ -43,13 +43,6 @@ namespace CheckoutOrder
                 AddScannedEachesItem(itemToScan, itemName);
             }
 
-            ShoppingCartItemHolder shoppingCartHolderOfThisItemType = ShoppingCart[itemToScan.ItemName];
-            int groupDiscountsGiven = shoppingCartHolderOfThisItemType.GroupDiscountsGiven;
-            int cartItemsCountAfterScan = shoppingCartHolderOfThisItemType.CartItems.Count;
-            if (GroupingDiscountValid(itemToScan, cartItemsCountAfterScan, groupDiscountsGiven))
-            {
-                ApplyGroupingDiscountForEachesItemAtSale(itemName);
-            }
             ComputeTotalBill();
         }
 
@@ -133,15 +126,24 @@ namespace CheckoutOrder
 
         }
 
-        public void ApplyGroupingDiscountSpecial(string itemName, int quantityToGetDiscount, double priceForGroup)
+        public void ApplyGroupingDiscountSpecial(string itemName, int quantityToGetDiscount, double priceForGroup,
+            int maxNumberOfDiscounts)
         {
             StockItem itemToScan = ItemsAvailableForSale[itemName];
             GroupDiscount grpDiscount = new GroupDiscount()
             {
                 PriceForGroup = priceForGroup,
-                QuantityToGetDiscount = quantityToGetDiscount
+                QuantityToGetDiscount = quantityToGetDiscount,
+                MaxNumberOfDiscounts = maxNumberOfDiscounts
             };
             itemToScan.GrpDiscount = grpDiscount;
+
+            if (itemToScan.PriceCategory == "eaches")
+            {
+                GroupDiscountEligibleEachesItemHolder shoppingCartHolderOfThisItemType =
+                    new GroupDiscountEligibleEachesItemHolder(itemToScan);
+                ShoppingCart[itemToScan.ItemName] = shoppingCartHolderOfThisItemType;
+            }
         }
 
         public void ApplyQuantityDiscountSpecial(string itemName, int quantityToGetDiscount, int quantityUnderDiscount, double discount, int maxNumberOfDiscounts)
@@ -166,30 +168,6 @@ namespace CheckoutOrder
                 ShoppingCart[itemToScan.ItemName] = shoppingCartHolderOfThisItemType;
             }
         }
-
-        private void ApplyGroupingDiscountForEachesItemAtSale(string itemName)
-        {
-            ShoppingCartItemHolder shoppingCartHolderOfThisItemType = ShoppingCart[itemName];
-            List<ShoppingCartItem> shoppingCartItemsOfThisType = (List<ShoppingCartItem>)(shoppingCartHolderOfThisItemType.CartItems);
-            StockItem inventoryItemOfThisType = ItemsAvailableForSale[itemName];
-            GroupDiscount discountForThisItemType = inventoryItemOfThisType.GrpDiscount;
-            double pricePerItem = discountForThisItemType.PriceForGroup /
-                                  discountForThisItemType.QuantityToGetDiscount;
-
-            int numberOfItemsToGetDiscount = inventoryItemOfThisType.GrpDiscount.QuantityToGetDiscount;
-            int totalShoppingCartItemsOfThisType = shoppingCartHolderOfThisItemType.CartItems.Count;
-            int firstItemIndexToGetDiscount = totalShoppingCartItemsOfThisType - numberOfItemsToGetDiscount;
-
-            for (int i = firstItemIndexToGetDiscount; i < totalShoppingCartItemsOfThisType; i++)
-            {
-                ShoppingCartItem itemToApplyDiscountTo = shoppingCartItemsOfThisType.ElementAt(i);
-                itemToApplyDiscountTo.UnitPrice = pricePerItem;
-                itemToApplyDiscountTo.ItemPrice = pricePerItem;
-            }
-            shoppingCartHolderOfThisItemType.GroupDiscountsGiven++;
-
-        }
-
 
         public double ComputeTotalBill()
         {
@@ -234,6 +212,7 @@ namespace CheckoutOrder
     {
         public int QuantityToGetDiscount { get; set; }
         public double PriceForGroup { get; set; }
+        public int MaxNumberOfDiscounts { get; set; }
     }
 
     public class ShoppingCartItemHolder
