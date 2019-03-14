@@ -24,10 +24,10 @@ namespace CheckoutOrder
         {
             TotalGroceryBill = 0;
             ShoppingCart = new Dictionary<string, ShoppingCartItemHolder>();
-            ShoppingCart.Add("Tomato Soup", new ShoppingCartItemHolder());
+            ShoppingCart.Add("Tomato Soup", new ShoppingCartItemHolder(this.ItemsAvailableForSale["Tomato Soup"]));
             ShoppingCart.Add("Bananas", new ShoppingCartItemHolder(this.ItemsAvailableForSale["Bananas"]));
             ShoppingCart.Add("Oranges", new ShoppingCartItemHolder(this.ItemsAvailableForSale["Oranges"]));
-            ShoppingCart.Add("Wheaties", new ShoppingCartItemHolder());
+            ShoppingCart.Add("Wheaties", new ShoppingCartItemHolder(this.ItemsAvailableForSale["Wheaties"]));
         }
 
         static void Main(string[] args)
@@ -39,16 +39,8 @@ namespace CheckoutOrder
         public void ScanItem(string itemName)
         {
             StockItem itemToScan = ItemsAvailableForSale[itemName];
-            ShoppingCartItemHolder shoppingCartHolderOfThisItemType = ShoppingCart[itemToScan.ItemName];
-            int quantityDiscountsGiven = shoppingCartHolderOfThisItemType.QuantityDiscountsGiven;
-            int groupDiscountsGiven = shoppingCartHolderOfThisItemType.GroupDiscountsGiven;
-            int cartItemsCount = shoppingCartHolderOfThisItemType.CartItems.Count;
 
-            if (QuantityDiscountValid(itemToScan, cartItemsCount, quantityDiscountsGiven))
-            {
-                ScanEachesItemWithQuantityDiscount(itemToScan, itemName);
-            }
-            else if (itemToScan.Markdown > 0)
+            if (itemToScan.Markdown > 0)
             {
                 AddScannedEachesItemWithMarkdown(itemToScan, itemName);
             }
@@ -57,6 +49,8 @@ namespace CheckoutOrder
                 AddScannedEachesItem(itemToScan, itemName);
             }
 
+            ShoppingCartItemHolder shoppingCartHolderOfThisItemType = ShoppingCart[itemToScan.ItemName];
+            int groupDiscountsGiven = shoppingCartHolderOfThisItemType.GroupDiscountsGiven;
             int cartItemsCountAfterScan = shoppingCartHolderOfThisItemType.CartItems.Count;
             if (GroupingDiscountValid(itemToScan, cartItemsCountAfterScan, groupDiscountsGiven))
             {
@@ -67,43 +61,8 @@ namespace CheckoutOrder
 
         private void AddScannedEachesItem(StockItem itemToAdd, string itemName)
         {
-            ShoppingCartItem currentItemBeingScanned = new ShoppingCartItem()
-            {
-                UnitPrice = itemToAdd.UnitPrice,
-                ItemPrice = itemToAdd.UnitPrice,
-            };
-            ShoppingCartItemHolder shoppingCartHolderOfThisItemType = ShoppingCart[itemName];
-            shoppingCartHolderOfThisItemType.CartItems.Add(currentItemBeingScanned);
-        }
-
-        private void ScanEachesItemWithQuantityDiscount(StockItem itemToAdd, string itemName)
-        {
-            QuantityDiscount qtyDiscount = itemToAdd.QtyDiscount;
-            double priceWithDiscount = itemToAdd.UnitPrice - (itemToAdd.UnitPrice * qtyDiscount.Discount);
-            ShoppingCartItem currentItemBeingScanned = new ShoppingCartItem()
-            {
-                UnitPrice = priceWithDiscount,
-                ItemPrice = priceWithDiscount
-            };
-
-            ShoppingCartItemHolder shoppingCartHolderOfThisItemType = ShoppingCart[itemName];
-            shoppingCartHolderOfThisItemType.CartItems.Add(currentItemBeingScanned);
-
-            UpdateQuantityDiscountCountIfDiscountWasFullyUsed(itemToAdd);
-        }
-
-        private void UpdateQuantityDiscountCountIfDiscountWasFullyUsed(StockItem inventoryItem)
-        {
-            ShoppingCartItemHolder shoppingCartHolderOfThisItemType = ShoppingCart[inventoryItem.ItemName];
-            int quantityDiscountsGiven = shoppingCartHolderOfThisItemType.QuantityDiscountsGiven;
-            int updatedCartItemsCount = shoppingCartHolderOfThisItemType.CartItems.Count;
-            int itemsToGetAFullDiscount = (quantityDiscountsGiven + 1) *
-                   (inventoryItem.QtyDiscount.QuantityUnderDiscount + inventoryItem.QtyDiscount.FullPriceItems);
-
-            if ((updatedCartItemsCount % itemsToGetAFullDiscount) == 0)
-            {
-                shoppingCartHolderOfThisItemType.QuantityDiscountsGiven++;
-            }
+            ShoppingCartItemHolder itemHolder = ShoppingCart[itemToAdd.ItemName];
+            itemHolder.ScanItem(itemName);
         }
 
         private void AddScannedEachesItemWithMarkdown(StockItem itemToAdd, string itemName)
@@ -214,6 +173,11 @@ namespace CheckoutOrder
                 QuantityDiscountEligibleItemHolder shoppingCartHolderOfThisItemType = new QuantityDiscountEligibleItemHolder(itemToScan);
                 ShoppingCart[itemToScan.ItemName] = shoppingCartHolderOfThisItemType;
             }
+            else if (itemToScan.PriceCategory == "eaches")
+            {
+                QuantityDiscountEligibleEachesItemHolder shoppingCartHolderOfThisItemType = new QuantityDiscountEligibleEachesItemHolder(itemToScan);
+                ShoppingCart[itemToScan.ItemName] = shoppingCartHolderOfThisItemType;
+            }
         }
 
         private void ApplyGroupingDiscountForEachesItemAtSale(string itemName)
@@ -300,9 +264,14 @@ namespace CheckoutOrder
             CartItems = new List<ShoppingCartItem>();
         }
 
-        public void ScanItem()
+        public virtual void ScanItem(string itemName)
         {
-            throw new NotImplementedException();
+            ShoppingCartItem currentItemBeingScanned = new ShoppingCartItem()
+            {
+                UnitPrice = _stockItem.UnitPrice,
+                ItemPrice = _stockItem.UnitPrice,
+            };
+            CartItems.Add(currentItemBeingScanned);
         }
 
         public virtual void ScanItem(string itemName, double itemWeight)
