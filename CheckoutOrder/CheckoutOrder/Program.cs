@@ -61,7 +61,7 @@ namespace CheckoutOrder
             StockItem itemToScan = ItemsAvailableForSale[itemName];
             if (itemToScan.PriceCategory == "eaches")
             {
-                ScanItem(itemName);
+                throw new InvalidStoreOperationException("Item " + itemName + " is an eaches item and does not have a valid weight.");
             }
             else if (itemToScan.PriceCategory == "byWeight")
             {

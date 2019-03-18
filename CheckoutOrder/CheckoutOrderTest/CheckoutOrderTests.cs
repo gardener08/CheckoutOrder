@@ -502,5 +502,11 @@ namespace CheckoutOrderTest
             _checkoutOrderUnderTest.ScanItem("Tomato Soup");
             Exception ex = Assert.Throws<InvalidStoreOperationException>(() => _checkoutOrderUnderTest.MarkDownItem("Tomato Soup", 0.05));
         }
+
+        [Fact]
+        public void ScanningAnEachesItemAsAWeighedItem()
+        {
+            Exception ex = Assert.Throws<InvalidStoreOperationException>(() => _checkoutOrderUnderTest.ScanItem("Tomato Soup", 2.0));
+        }
     }
 }
