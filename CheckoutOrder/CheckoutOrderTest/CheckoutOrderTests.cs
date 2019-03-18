@@ -508,5 +508,23 @@ namespace CheckoutOrderTest
         {
             Exception ex = Assert.Throws<InvalidStoreOperationException>(() => _checkoutOrderUnderTest.ScanItem("Tomato Soup", 2.0));
         }
+
+        [Fact]
+        public void ScanMultipleWeightedAndEachesItemsWithSpecials()
+        {
+            _checkoutOrderUnderTest.ApplyGroupingDiscountSpecial("Wheaties", 3, 7, -1);
+            _checkoutOrderUnderTest.MarkDownItem("Tomato Soup", 0.17);
+            _checkoutOrderUnderTest.ApplyQuantityDiscountSpecial("Oranges", 1, 1, .5, -1);
+
+            _checkoutOrderUnderTest.ScanItem("Oranges", 1);
+            _checkoutOrderUnderTest.ScanItem("Wheaties");
+            _checkoutOrderUnderTest.ScanItem("Wheaties");
+            _checkoutOrderUnderTest.ScanItem("Oranges", 1);
+            _checkoutOrderUnderTest.ScanItem("Tomato Soup");
+            _checkoutOrderUnderTest.ScanItem("Tomato Soup");
+            _checkoutOrderUnderTest.ScanItem("Wheaties");
+
+            Assert.Equal(9, _checkoutOrderUnderTest.TotalGroceryBill, 2);
+        }
     }
 }
