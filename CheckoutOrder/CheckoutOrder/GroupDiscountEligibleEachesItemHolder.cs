@@ -48,7 +48,7 @@ namespace CheckoutOrder
             GroupDiscountsGiven++;
         }
 
-        private bool GroupingDiscountValid(StockItem item, int currentItemPositionOneBased, int groupDiscountsGiven, int maxNumberOfDiscounts)
+        public bool GroupingDiscountValid(StockItem item, int currentItemPositionOneBased, int groupDiscountsGiven, int maxNumberOfDiscounts)
         {
             GroupDiscount grpDiscount = item.GrpDiscount;
             if (grpDiscount != null)

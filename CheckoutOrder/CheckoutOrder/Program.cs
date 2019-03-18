@@ -80,28 +80,6 @@ namespace CheckoutOrder
             ShoppingCart[inventoryItem.ItemName] = shoppingCartHolderOfThisItemType;
         }
 
-        public bool GroupingDiscountValid(StockItem item, int currentItemPositionOneBased, int groupDiscountsGiven)
-        {
-            GroupDiscount grpDiscount = item.GrpDiscount;
-            if (grpDiscount != null)
-            {
-                bool discountEligible = (currentItemPositionOneBased == ((groupDiscountsGiven + 1) * grpDiscount.QuantityToGetDiscount));
-                if (discountEligible)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
-
-        }
-
         public void ApplyGroupingDiscountSpecial(string itemName, int quantityToGetDiscount, double priceForGroup,
             int maxNumberOfDiscounts)
         {

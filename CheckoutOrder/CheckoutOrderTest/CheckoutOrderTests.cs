@@ -266,6 +266,7 @@ namespace CheckoutOrderTest
             };
             int numberOfItemsInThisCart = 3;
             int groupDiscountsGiven = 0;
+            int maxNumberOfDiscounts = 1;
             StockItem itemToScan = new StockItem()
             {
                 ItemName = "TestItem",
@@ -273,8 +274,53 @@ namespace CheckoutOrderTest
                 UnitPrice = 2.0,
                 GrpDiscount = grpDiscount,
             };
-            bool quantityDiscountValid = _checkoutOrderUnderTest.GroupingDiscountValid(itemToScan, numberOfItemsInThisCart, groupDiscountsGiven);
+            GroupDiscountEligibleEachesItemHolder shoppingCartItemHolder = new GroupDiscountEligibleEachesItemHolder(itemToScan);
+            bool quantityDiscountValid = shoppingCartItemHolder.GroupingDiscountValid(itemToScan, numberOfItemsInThisCart, groupDiscountsGiven, maxNumberOfDiscounts);
             Assert.True(quantityDiscountValid);
+        }
+
+        [Fact]
+        public void InvalidGroupingDiscountExceededMaximumNumberOfGroupings()
+        {
+            GroupDiscount grpDiscount = new GroupDiscount()
+            {
+                QuantityToGetDiscount = 3
+            };
+            int numberOfItemsInThisCart = 6;
+            int groupDiscountsGiven = 1;
+            int maxNumberOfDiscounts = 1;
+            StockItem itemToScan = new StockItem()
+            {
+                ItemName = "TestItem",
+                PriceCategory = "eaches",
+                UnitPrice = 2.0,
+                GrpDiscount = grpDiscount,
+            };
+            GroupDiscountEligibleEachesItemHolder shoppingCartItemHolder = new GroupDiscountEligibleEachesItemHolder(itemToScan);
+            bool quantityDiscountValid = shoppingCartItemHolder.GroupingDiscountValid(itemToScan, numberOfItemsInThisCart, groupDiscountsGiven, maxNumberOfDiscounts);
+            Assert.False(quantityDiscountValid);
+        }
+
+        [Fact]
+        public void InvalidGroupingDiscountHaventHitCountToGetDiscount()
+        {
+            GroupDiscount grpDiscount = new GroupDiscount()
+            {
+                QuantityToGetDiscount = 3
+            };
+            int numberOfItemsInThisCart = 5;
+            int groupDiscountsGiven = 1;
+            int maxNumberOfDiscounts = 1;
+            StockItem itemToScan = new StockItem()
+            {
+                ItemName = "TestItem",
+                PriceCategory = "eaches",
+                UnitPrice = 2.0,
+                GrpDiscount = grpDiscount,
+            };
+            GroupDiscountEligibleEachesItemHolder shoppingCartItemHolder = new GroupDiscountEligibleEachesItemHolder(itemToScan);
+            bool quantityDiscountValid = shoppingCartItemHolder.GroupingDiscountValid(itemToScan, numberOfItemsInThisCart, groupDiscountsGiven, maxNumberOfDiscounts);
+            Assert.False(quantityDiscountValid);
         }
 
         [Fact]
