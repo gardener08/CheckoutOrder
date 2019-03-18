@@ -80,30 +80,6 @@ namespace CheckoutOrder
             ShoppingCart[inventoryItem.ItemName] = shoppingCartHolderOfThisItemType;
         }
 
-        public bool QuantityDiscountValid(StockItem item, int currentItemPosition, int quantityDiscountsGiven)
-        {
-            QuantityDiscount qtyDiscount = item.QtyDiscount;
-            if (qtyDiscount != null)
-            {
-                int itemsToGetAFullDiscount = (quantityDiscountsGiven + 1) *
-                                       (qtyDiscount.QuantityUnderDiscount + qtyDiscount.FullPriceItems);
-                int startDiscountAt = (itemsToGetAFullDiscount - qtyDiscount.QuantityUnderDiscount);
-
-                if ((currentItemPosition < itemsToGetAFullDiscount) && (currentItemPosition >= startDiscountAt))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
-        }
-
         public bool GroupingDiscountValid(StockItem item, int currentItemPositionOneBased, int groupDiscountsGiven)
         {
             GroupDiscount grpDiscount = item.GrpDiscount;

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CheckoutOrder
 {
-    class QuantityDiscountEligibleWeighedItemHolder : ShoppingCartItemHolder
+    public class QuantityDiscountEligibleWeighedItemHolder : ShoppingCartItemHolder
     {
         public QuantityDiscountEligibleWeighedItemHolder(StockItem inventoryItem) : base(inventoryItem)
         {

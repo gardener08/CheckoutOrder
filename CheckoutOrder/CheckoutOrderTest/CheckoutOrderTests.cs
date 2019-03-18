@@ -126,7 +126,9 @@ namespace CheckoutOrderTest
                 UnitPrice = 2.0,
                 QtyDiscount = qtyDiscount
             };
-            bool quantityDiscountValid = _checkoutOrderUnderTest.QuantityDiscountValid(itemToScan, numberOfItemsInThisCart, quantityDiscountsGiven);
+
+            QuantityDiscountEligibleEachesItemHolder shoppingCartItemHolder = new QuantityDiscountEligibleEachesItemHolder(itemToScan);
+            bool quantityDiscountValid = shoppingCartItemHolder.QuantityDiscountValid(itemToScan, numberOfItemsInThisCart, quantityDiscountsGiven);
             Assert.True(quantityDiscountValid);
         }
 
@@ -148,7 +150,9 @@ namespace CheckoutOrderTest
                 UnitPrice = 2.0,
                 QtyDiscount = qtyDiscount
             };
-            bool quantityDiscountValid = _checkoutOrderUnderTest.QuantityDiscountValid(itemToScan, numberOfItemsInThisCart, quantityDiscountsGiven);
+
+            QuantityDiscountEligibleEachesItemHolder shoppingCartItemHolder = new QuantityDiscountEligibleEachesItemHolder(itemToScan);
+            bool quantityDiscountValid = shoppingCartItemHolder.QuantityDiscountValid(itemToScan, numberOfItemsInThisCart, quantityDiscountsGiven);
             Assert.False(quantityDiscountValid);
         }
 
@@ -170,7 +174,9 @@ namespace CheckoutOrderTest
                 UnitPrice = 2.0,
                 QtyDiscount = qtyDiscount
             };
-            bool quantityDiscountValid = _checkoutOrderUnderTest.QuantityDiscountValid(itemToScan, numberOfItemsInThisCart, quantityDiscountsGiven);
+
+            QuantityDiscountEligibleEachesItemHolder shoppingCartItemHolder = new QuantityDiscountEligibleEachesItemHolder(itemToScan);
+            bool quantityDiscountValid = shoppingCartItemHolder.QuantityDiscountValid(itemToScan, numberOfItemsInThisCart, quantityDiscountsGiven);
             Assert.False(quantityDiscountValid);
         }
 

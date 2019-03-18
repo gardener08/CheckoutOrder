@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CheckoutOrder
 {
-    class MarkedDownEachesItemHolder : ShoppingCartItemHolder
+    public class MarkedDownEachesItemHolder : ShoppingCartItemHolder
     {
         public MarkedDownEachesItemHolder(StockItem inventoryItem) : base(inventoryItem)
         {

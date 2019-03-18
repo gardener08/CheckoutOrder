@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CheckoutOrder
 {
-    class QuantityDiscountEligibleEachesItemHolder : ShoppingCartItemHolder
+    public class QuantityDiscountEligibleEachesItemHolder : ShoppingCartItemHolder
     {
         public QuantityDiscountEligibleEachesItemHolder(StockItem inventoryItem) : base(inventoryItem)
         {
@@ -39,7 +39,7 @@ namespace CheckoutOrder
             UpdateQuantityDiscountCountIfDiscountWasFullyUsed(_stockItem);
         }
 
-        private bool QuantityDiscountValid(StockItem item, int currentItemPosition, int quantityDiscountsGiven)
+        public bool QuantityDiscountValid(StockItem item, int currentItemPosition, int quantityDiscountsGiven)
         {
             QuantityDiscount qtyDiscount = item.QtyDiscount;
             if (qtyDiscount != null)
