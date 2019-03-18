@@ -76,5 +76,21 @@ namespace CheckoutOrder
             }
             this.CartItems = linearCopyOfTheseCartItems;
         }
+
+        public override void VoidItem(string itemName)
+        {
+            IList<ShoppingCartItem> currentShoppingCartItemsInThisDiscountGroup = _quantityDiscountEligibleGroups.Peek();
+            int numberOfItems = currentShoppingCartItemsInThisDiscountGroup.Count;
+            if (currentShoppingCartItemsInThisDiscountGroup.Count > 1)
+            {
+                currentShoppingCartItemsInThisDiscountGroup.RemoveAt(numberOfItems - 1);
+            }
+            else
+            {
+                _quantityDiscountEligibleGroups.Pop();
+            }
+
+            ConvertToCartItems();
+        }
     }
 }

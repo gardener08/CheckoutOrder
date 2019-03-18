@@ -241,6 +241,22 @@ namespace CheckoutOrderTest
         }
 
         [Fact]
+        public void BuyEnoughWeighedItemsToGetTwoQuantityDiscountsAndThenVoidAndReAddSome()
+        {
+            _checkoutOrderUnderTest.ApplyQuantityDiscountSpecial("Oranges", 2, 1, 0.5, -1);
+            ScanMultipleWeighedItemsWithTheSameWeight(_checkoutOrderUnderTest, "Oranges", 2.0, 6);
+
+            _checkoutOrderUnderTest.VoidItem("Oranges");
+            _checkoutOrderUnderTest.VoidItem("Oranges");
+            _checkoutOrderUnderTest.VoidItem("Oranges");
+            _checkoutOrderUnderTest.VoidItem("Oranges");
+
+            ScanMultipleWeighedItemsWithTheSameWeight(_checkoutOrderUnderTest, "Oranges", 2.0, 4);
+
+            Assert.Equal(10, _checkoutOrderUnderTest.TotalGroceryBill);
+        }
+
+        [Fact]
         public void BuyEnoughWeighedItemsOfVaryingWeightsToGetTwoQuantityDiscounts()
         {
             _checkoutOrderUnderTest.ApplyQuantityDiscountSpecial("Oranges", 2, 1, 0.5, -1);
