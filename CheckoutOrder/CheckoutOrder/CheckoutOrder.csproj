@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="DTO.cs" />
     <Compile Include="GroupDiscountEligibleEachesItemHolder.cs" />
+    <Compile Include="InvalidStoreOperationException.cs" />
     <Compile Include="MarkedDownEachesItemHolder.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

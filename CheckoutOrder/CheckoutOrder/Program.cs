@@ -19,6 +19,7 @@ namespace CheckoutOrder
             {"Wheaties", new StockItem { ItemName= "Wheaties", UnitPrice = 3.25, Markdown = 0, PriceCategory = "eaches"}},        };
 
         public IDictionary<string, ShoppingCartItemHolder> ShoppingCart { get; }
+        private bool _itemsHaveBeenScanned;
 
         public Program()
         {
@@ -28,6 +29,7 @@ namespace CheckoutOrder
             ShoppingCart.Add("Bananas", new ShoppingCartItemHolder(this.ItemsAvailableForSale["Bananas"]));
             ShoppingCart.Add("Oranges", new ShoppingCartItemHolder(this.ItemsAvailableForSale["Oranges"]));
             ShoppingCart.Add("Wheaties", new ShoppingCartItemHolder(this.ItemsAvailableForSale["Wheaties"]));
+            _itemsHaveBeenScanned = false;
         }
 
         static void Main(string[] args)
@@ -38,6 +40,7 @@ namespace CheckoutOrder
 
         public void ScanItem(string itemName)
         {
+            _itemsHaveBeenScanned = true;
             StockItem itemToScan = ItemsAvailableForSale[itemName];
             {
                 AddScannedEachesItem(itemToScan, itemName);
@@ -54,6 +57,7 @@ namespace CheckoutOrder
 
         public void ScanItem(string itemName, double itemWeight)
         {
+            _itemsHaveBeenScanned = true;
             StockItem itemToScan = ItemsAvailableForSale[itemName];
             if (itemToScan.PriceCategory == "eaches")
             {
@@ -74,6 +78,10 @@ namespace CheckoutOrder
 
         public void MarkDownItem(string itemName, double markdown)
         {
+            if (_itemsHaveBeenScanned)
+            {
+                throw new InvalidStoreOperationException("Markdowns and Specials cannot be applied after items have been scanned.");
+            }
             StockItem inventoryItem = ItemsAvailableForSale[itemName];
             ItemsAvailableForSale[itemName].Markdown = markdown;
             MarkedDownEachesItemHolder shoppingCartHolderOfThisItemType = new MarkedDownEachesItemHolder(inventoryItem);
@@ -83,6 +91,10 @@ namespace CheckoutOrder
         public void ApplyGroupingDiscountSpecial(string itemName, int quantityToGetDiscount, double priceForGroup,
             int maxNumberOfDiscounts)
         {
+            if (_itemsHaveBeenScanned)
+            {
+                throw new InvalidStoreOperationException("Markdowns and Specials cannot be applied after items have been scanned.");
+            }
             StockItem itemToScan = ItemsAvailableForSale[itemName];
             GroupDiscount grpDiscount = new GroupDiscount()
             {
@@ -102,6 +114,10 @@ namespace CheckoutOrder
 
         public void ApplyQuantityDiscountSpecial(string itemName, int quantityToGetDiscount, int quantityUnderDiscount, double discount, int maxNumberOfDiscounts)
         {
+            if (_itemsHaveBeenScanned)
+            {
+                throw new InvalidStoreOperationException("Markdowns and Specials cannot be applied after items have been scanned.");
+            }
             StockItem itemToScan = ItemsAvailableForSale[itemName];
             QuantityDiscount qtyDiscount = new QuantityDiscount()
             {
