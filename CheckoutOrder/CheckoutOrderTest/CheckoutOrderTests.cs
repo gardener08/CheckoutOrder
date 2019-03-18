@@ -23,6 +23,14 @@ namespace CheckoutOrderTest
             Assert.Equal(.42, _checkoutOrderUnderTest.TotalGroceryBill);
         }
 
+        [Fact]
+        public void VoidItem()
+        {
+            _checkoutOrderUnderTest.ScanItem("Tomato Soup");
+            _checkoutOrderUnderTest.VoidItem("Tomato Soup");
+            Assert.Equal(0, _checkoutOrderUnderTest.TotalGroceryBill);
+        }
+
         private void ScanMultipleEachesItems(Program itemUnderTest, string itemName, int numberOfItemsToScan)
         {
             for (int i = 0; i < numberOfItemsToScan; i++)

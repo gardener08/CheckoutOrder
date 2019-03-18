@@ -49,5 +49,11 @@ namespace CheckoutOrder
             };
             this.CartItems.Add(currentItemBeingScanned);
         }
+
+        public virtual void VoidItem(string itemName)
+        {
+            int indexOfLastItem = CartItems.Count - 1;
+            CartItems.RemoveAt(indexOfLastItem);
+        }
     }
 }

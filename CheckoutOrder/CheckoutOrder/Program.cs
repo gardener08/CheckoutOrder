@@ -49,10 +49,23 @@ namespace CheckoutOrder
             ComputeTotalBill();
         }
 
+        public void VoidItem(string itemName)
+        {
+            StockItem itemToVoid = ItemsAvailableForSale[itemName];
+            VoidScannedEachesItem(itemName);
+            ComputeTotalBill();
+        }
+
         private void AddScannedEachesItem(StockItem itemToAdd, string itemName)
         {
             ShoppingCartItemHolder itemHolder = ShoppingCart[itemToAdd.ItemName];
             itemHolder.ScanItem(itemName);
+        }
+
+        private void VoidScannedEachesItem(string itemName)
+        {
+            ShoppingCartItemHolder itemHolder = ShoppingCart[itemName];
+            itemHolder.VoidItem(itemName);
         }
 
         public void ScanItem(string itemName, double itemWeight)
