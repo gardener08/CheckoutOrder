@@ -43,7 +43,7 @@ namespace CheckoutOrder
             _itemsHaveBeenScanned = true;
             StockItem itemToScan = ItemsAvailableForSale[itemName];
             {
-                AddScannedEachesItem(itemToScan, itemName);
+                AddScannedEachesItem(itemName);
             }
 
             ComputeTotalBill();
@@ -57,9 +57,9 @@ namespace CheckoutOrder
             ComputeTotalBill();
         }
 
-        private void AddScannedEachesItem(StockItem itemToAdd, string itemName)
+        private void AddScannedEachesItem(string itemName)
         {
-            ShoppingCartItemHolder itemHolder = ShoppingCart[itemToAdd.ItemName];
+            ShoppingCartItemHolder itemHolder = ShoppingCart[itemName];
             itemHolder.ScanItem(itemName);
         }
 
@@ -73,14 +73,14 @@ namespace CheckoutOrder
             }
             else if (itemToScan.PriceCategory == "byWeight")
             {
-                AddScannedWeighedItem(itemToScan, itemName, itemWeight);              
+                AddScannedWeighedItem(itemName, itemWeight);              
             }
             ComputeTotalBill();
         }
 
-        private void AddScannedWeighedItem(StockItem itemToAdd, string itemName, double itemWeight)
+        private void AddScannedWeighedItem(string itemName, double itemWeight)
         {
-            ShoppingCartItemHolder itemHolder = ShoppingCart[itemToAdd.ItemName];
+            ShoppingCartItemHolder itemHolder = ShoppingCart[itemName];
             itemHolder.ScanItem(itemName, itemWeight);
         }
 
