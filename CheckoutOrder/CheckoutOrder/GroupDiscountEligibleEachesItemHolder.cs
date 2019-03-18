@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CheckoutOrder
+﻿namespace CheckoutOrder
 {
     public class GroupDiscountEligibleEachesItemHolder : ShoppingCartItemHolder
     {
@@ -41,7 +35,7 @@ namespace CheckoutOrder
 
             for (int i = firstItemIndexToGetDiscount; i < totalShoppingCartItemsOfThisType; i++)
             {
-                ShoppingCartItem itemToApplyDiscountTo = CartItems.ElementAt(i);
+                ShoppingCartItem itemToApplyDiscountTo = CartItems[i];
                 itemToApplyDiscountTo.UnitPrice = pricePerItem;
                 itemToApplyDiscountTo.ItemPrice = pricePerItem;
             }
@@ -51,28 +45,18 @@ namespace CheckoutOrder
         public bool GroupingDiscountValid(StockItem item, int currentItemPositionOneBased, int groupDiscountsGiven, int maxNumberOfDiscounts)
         {
             GroupDiscount grpDiscount = item.GrpDiscount;
-            if (grpDiscount != null)
-            {
-                int nextItemToTriggerGroupDiscount = (groupDiscountsGiven + 1) * grpDiscount.QuantityToGetDiscount;
-                if ((nextItemToTriggerGroupDiscount > (maxNumberOfDiscounts * grpDiscount.QuantityToGetDiscount))
-                    && (maxNumberOfDiscounts > 0))
-                {
-                    return false;
-                }
-                bool discountEligible = (currentItemPositionOneBased == nextItemToTriggerGroupDiscount);
-                if (discountEligible)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
+            if (grpDiscount == null)
             {
                 return false;
             }
+            int nextItemToTriggerGroupDiscount = (groupDiscountsGiven + 1) * grpDiscount.QuantityToGetDiscount;
+            if ((nextItemToTriggerGroupDiscount > (maxNumberOfDiscounts * grpDiscount.QuantityToGetDiscount))
+                && (maxNumberOfDiscounts > 0))
+            {
+                return false;
+            }
+            bool discountEligible = (currentItemPositionOneBased == nextItemToTriggerGroupDiscount);
+            return discountEligible;
         }
     }
 }

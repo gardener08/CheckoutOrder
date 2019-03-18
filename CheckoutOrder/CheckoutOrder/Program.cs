@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace CheckoutOrder
 {
@@ -41,26 +36,16 @@ namespace CheckoutOrder
         public void ScanItem(string itemName)
         {
             _itemsHaveBeenScanned = true;
-            StockItem itemToScan = ItemsAvailableForSale[itemName];
-            {
-                AddScannedEachesItem(itemName);
-            }
-
+            ShoppingCartItemHolder itemHolder = ShoppingCart[itemName];
+            itemHolder.ScanItem(itemName);
             ComputeTotalBill();
         }
 
         public void VoidItem(string itemName)
         {
-            StockItem itemToVoid = ItemsAvailableForSale[itemName];
             ShoppingCartItemHolder itemHolder = ShoppingCart[itemName];
             itemHolder.VoidItem(itemName);
             ComputeTotalBill();
-        }
-
-        private void AddScannedEachesItem(string itemName)
-        {
-            ShoppingCartItemHolder itemHolder = ShoppingCart[itemName];
-            itemHolder.ScanItem(itemName);
         }
 
         public void ScanItem(string itemName, double itemWeight)
@@ -71,17 +56,12 @@ namespace CheckoutOrder
             {
                 throw new InvalidStoreOperationException("Item " + itemName + " is an eaches item and does not have a valid weight.");
             }
-            else if (itemToScan.PriceCategory == "byWeight")
+            if (itemToScan.PriceCategory == "byWeight")
             {
-                AddScannedWeighedItem(itemName, itemWeight);              
+                ShoppingCartItemHolder itemHolder = ShoppingCart[itemName];
+                itemHolder.ScanItem(itemName, itemWeight);
             }
             ComputeTotalBill();
-        }
-
-        private void AddScannedWeighedItem(string itemName, double itemWeight)
-        {
-            ShoppingCartItemHolder itemHolder = ShoppingCart[itemName];
-            itemHolder.ScanItem(itemName, itemWeight);
         }
 
         public void MarkDownItem(string itemName, double markdown)

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace CheckoutOrder
 {
@@ -54,7 +50,7 @@ namespace CheckoutOrder
             {
                 if (i >= _qtyDiscount.FullPriceItems)
                 {
-                    ShoppingCartItem currentItem = currentShoppingCartItemsInThisDiscountGroup.ElementAt(i);
+                    ShoppingCartItem currentItem = currentShoppingCartItemsInThisDiscountGroup[i];
                     double unitPriceWithDiscount = currentItem.UnitPrice - (currentItem.UnitPrice * _qtyDiscount.Discount);
                     double itemPrice = unitPriceWithDiscount * currentItem.ItemWeight;
                     currentItem.ItemPrice = itemPrice;

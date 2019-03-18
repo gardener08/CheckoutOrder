@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CheckoutOrder
+﻿namespace CheckoutOrder
 {
     public class QuantityDiscountEligibleEachesItemHolder : ShoppingCartItemHolder
     {
@@ -42,29 +36,25 @@ namespace CheckoutOrder
         public bool QuantityDiscountValid(StockItem item, int currentItemPosition, int quantityDiscountsGiven)
         {
             QuantityDiscount qtyDiscount = item.QtyDiscount;
-            if (qtyDiscount != null)
-            {
-                if ((qtyDiscount.MaximumNumberOfDiscounts > 0) && (quantityDiscountsGiven > qtyDiscount.MaximumNumberOfDiscounts))
-                {
-                    return false;
-                }
-                int itemsToGetAFullDiscount = (quantityDiscountsGiven + 1) *
-                                       (qtyDiscount.QuantityUnderDiscount + qtyDiscount.FullPriceItems);
-                int startDiscountAt = (itemsToGetAFullDiscount - qtyDiscount.QuantityUnderDiscount);
-
-                if ((currentItemPosition < itemsToGetAFullDiscount) && (currentItemPosition >= startDiscountAt))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
+            if (qtyDiscount == null)
             {
                 return false;
             }
+
+            if ((qtyDiscount.MaximumNumberOfDiscounts > 0) && (quantityDiscountsGiven > qtyDiscount.MaximumNumberOfDiscounts))
+            {
+                return false;
+            }
+            int itemsToGetAFullDiscount = (quantityDiscountsGiven + 1) *
+                                    (qtyDiscount.QuantityUnderDiscount + qtyDiscount.FullPriceItems);
+            int startDiscountAt = (itemsToGetAFullDiscount - qtyDiscount.QuantityUnderDiscount);
+
+            if ((currentItemPosition < itemsToGetAFullDiscount) && (currentItemPosition >= startDiscountAt))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private void UpdateQuantityDiscountCountIfDiscountWasFullyUsed(StockItem inventoryItem)
@@ -82,7 +72,7 @@ namespace CheckoutOrder
 
             if ((updatedCartItemsCount % itemsToGetAFullDiscount) == 0)
             {
-                this.QuantityDiscountsGiven++;
+                QuantityDiscountsGiven++;
             }
         }
     }

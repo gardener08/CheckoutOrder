@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace CheckoutOrder
 {
@@ -47,7 +43,7 @@ namespace CheckoutOrder
                 ItemPrice = itemPrice,
                 ItemWeight = itemWeight
             };
-            this.CartItems.Add(currentItemBeingScanned);
+            CartItems.Add(currentItemBeingScanned);
         }
 
         public virtual void VoidItem(string itemName)

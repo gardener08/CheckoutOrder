@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using CheckoutOrder;
 
@@ -220,9 +216,7 @@ namespace CheckoutOrderTest
         public void BuySomeGetSomeMoreAtADiscountByWeight()
         {
             _checkoutOrderUnderTest.ApplyQuantityDiscountSpecial("Oranges", 2, 1, 0.5, -1);
-            _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
-            _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
-            _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
+            ScanMultipleWeighedItemsWithTheSameWeight(_checkoutOrderUnderTest, "Oranges", 2.0, 3);
             Assert.Equal(5.00, _checkoutOrderUnderTest.TotalGroceryBill);
         }
 
@@ -230,13 +224,7 @@ namespace CheckoutOrderTest
         public void BuyEnoughWeighedItemsToGetTwoQuantityDiscounts()
         {
             _checkoutOrderUnderTest.ApplyQuantityDiscountSpecial("Oranges", 2, 1, 0.5, -1);
-            _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
-            _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
-            _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
-            _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
-            _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
-            _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
-
+            ScanMultipleWeighedItemsWithTheSameWeight(_checkoutOrderUnderTest, "Oranges", 2.0, 6);
             Assert.Equal(10, _checkoutOrderUnderTest.TotalGroceryBill);
         }
 
@@ -290,10 +278,7 @@ namespace CheckoutOrderTest
         public void BuySomeGetSomeMoreAtADiscountWithExtrasAtFullPriceByWeight()
         {
             _checkoutOrderUnderTest.ApplyQuantityDiscountSpecial("Oranges", 2, 1, 0.5, -1);
-            _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
-            _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
-            _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
-            _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
+            ScanMultipleWeighedItemsWithTheSameWeight(_checkoutOrderUnderTest, "Oranges", 2.0, 4);
             Assert.Equal(7.00, _checkoutOrderUnderTest.TotalGroceryBill);
         }
 
@@ -421,10 +406,7 @@ namespace CheckoutOrderTest
         public void BuySomeGetSomeMoreAtADiscountByWeightComputeTotalBill()
         {
             _checkoutOrderUnderTest.ApplyQuantityDiscountSpecial("Oranges", 2, 1, 0.5, -1);
-            _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
-            _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
-            _checkoutOrderUnderTest.ScanItem("Oranges", 2.0);
-
+            ScanMultipleWeighedItemsWithTheSameWeight(_checkoutOrderUnderTest, "Oranges", 2.0, 3);
             Assert.Equal(5.00, _checkoutOrderUnderTest.ComputeTotalBill());
         }
 
@@ -509,10 +491,8 @@ namespace CheckoutOrderTest
             _checkoutOrderUnderTest.ScanItem("Oranges", 3.0);
 
             // Total for this group should be 2.5
-            _checkoutOrderUnderTest.ScanItem("Oranges", 1);
-            _checkoutOrderUnderTest.ScanItem("Oranges", 1);
-            _checkoutOrderUnderTest.ScanItem("Oranges", 1);
-
+            ScanMultipleWeighedItemsWithTheSameWeight(_checkoutOrderUnderTest, "Oranges", 1, 3);
+            
             _checkoutOrderUnderTest.ScanItem("Oranges", 10);
 
             Assert.Equal(42, _checkoutOrderUnderTest.TotalGroceryBill);
